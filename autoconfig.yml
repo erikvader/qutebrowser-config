@@ -9,7 +9,7 @@ settings:
         ;I: hint images download
         ;Y: hint images yank
         ;i: hint images run open -t {hint-url}
-        E: spawn -d google-chrome-stable {url}
+        E: set-cmd-text :spawn -d google-chrome-stable {url}
         e: open-editor
         j: scroll-px 0 40
         k: scroll-px 0 -40
