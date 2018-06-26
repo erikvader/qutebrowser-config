@@ -9,8 +9,8 @@ settings:
         ;I: hint images download
         ;Y: hint images yank
         ;i: hint images run open -t {hint-url}
-        E: open-editor
-        M: quickmark-save
+        E: spawn -d google-chrome-stable {url}
+        e: open-editor
         j: scroll-px 0 40
         k: scroll-px 0 -40
         m: enter-mode set_mark
@@ -46,6 +46,7 @@ settings:
       DEFAULT: https://google.se/search?q={}
       ddg: https://duckduckgo.com/?q={}
       go: https://google.se/search?q={}
+      py: https://docs.python.org/3/search.html?q={}
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
     global: https://google.se
