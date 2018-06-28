@@ -40,15 +40,16 @@ settings:
   tabs.last_close:
     global: close
   url.default_page:
-    global: https://google.se
+    global: about:blank
   url.searchengines:
     global:
       DEFAULT: https://google.se/search?q={}
       ddg: https://duckduckgo.com/?q={}
       go: https://google.se/search?q={}
+      ho: https://www.haskell.org/hoogle/?hoogle={}
       py: https://docs.python.org/3/search.html?q={}
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
-    global: https://google.se
+    global: about:blank
   window.title_format:
     global: '{perc}{title}'
