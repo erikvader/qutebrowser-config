@@ -6,10 +6,13 @@ settings:
   bindings.commands:
     global:
       normal:
+        '1': hint links userscript instaloot
         ;I: hint images download
         ;Y: hint images yank
         ;i: hint images run open -t {hint-url}
+        ;l: hint links userscript instaloot
         E: set-cmd-text :spawn -d google-chrome-stable {url}
+        cm: clear-messages
         e: open-editor
         j: scroll-px 0 40
         k: scroll-px 0 -40

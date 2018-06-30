@@ -1,0 +1,11 @@
+#!/bin/bash
+
+post="$(echo "$QUTE_URL" | sed -nE 's|^https?://(www\.)?instagram\.com/p/(.+?)/.*$|\2|p')"
+
+if [[ -z "$post" ]]; then
+    echo "message-error '$QUTE_URL is not a valid url'" > "$QUTE_FIFO"
+    exit
+fi
+
+instalooter post "$post" "$HOME/Pictures/instagram/singles" -v -T '{username}.{date}.{id}' 2>&1 | sed -uE 's/^(.*)$/message-info "\1"/' >> "$QUTE_FIFO"
+
