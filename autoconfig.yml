@@ -11,6 +11,7 @@ settings:
         ;Y: hint images yank
         ;i: hint images run open -t {hint-url}
         ;l: hint links userscript instaloot
+        D: spawn open_downloaded_pdf
         E: set-cmd-text :spawn -d google-chrome-stable {url}
         cm: clear-messages
         e: open-editor
