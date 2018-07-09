@@ -7,19 +7,28 @@ settings:
     global:
       normal:
         '1': hint links userscript instaloot
+        '2': hint --rapid links userscript instaloot
+        '3': spawn --userscript instaloot
         ;I: hint images download
         ;Y: hint images yank
         ;i: hint images run open -t {hint-url}
         ;l: hint links userscript instaloot
-        D: spawn open_downloaded_pdf
+        <Ctrl+j>: tab-move +
+        <Ctrl+k>: tab-move -
+        D: spawn --userscript openurxvt
         E: set-cmd-text :spawn -d google-chrome-stable {url}
         cm: clear-messages
         e: open-editor
+        gD: spawn open_downloaded_pdf
         j: scroll-px 0 40
         k: scroll-px 0 -40
         m: enter-mode set_mark
         wg: set-cmd-text --space :tab-give
         wt: set-cmd-text --space :tab-take
+  downloads.open_dispatcher:
+    global: rifle
+  downloads.position:
+    global: bottom
   editor.command:
     global:
     - emacsclient

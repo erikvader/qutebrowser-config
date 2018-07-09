@@ -1,0 +1,4 @@
+#!/bin/bash
+
+urxvt -hold -e "$HOME/.config/qutebrowser/userscripts/openranger" &
+
