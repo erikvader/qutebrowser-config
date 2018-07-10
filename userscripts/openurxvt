@@ -1,4 +1,4 @@
 #!/bin/bash
 
-urxvt -hold -e "$HOME/.config/qutebrowser/userscripts/openranger" &
+exec urxvt -hold -e "$QUTE_CONFIG_DIR/userscripts/openranger"
 

@@ -1,0 +1,112 @@
+#!/bin/python
+
+import os
+from bs4 import BeautifulSoup
+import re
+import subprocess as S
+import threading as T
+from time import sleep
+import math
+import atexit
+
+visitedFile = "/tmp/instaall_visited"
+visitedLock = T.Lock()
+visited = set()
+
+failedLock = T.Lock()
+failed = []
+
+runningFile = "/tmp/instaall_running"
+
+def downloadPost(post):
+   result = S.run(["instalooter", "post", post, os.environ["HOME"] + "/Pictures/instagram", "-v", "-T", "{username}.{date}.{id}"])
+
+   if result.returncode == 0:
+      with visitedLock:
+         visited.add(post)
+   else:
+      with failedLock:
+         failed.append(post)
+
+def qute_print(msg):
+   with open(os.environ["QUTE_FIFO"], "w") as f:
+      f.write("message-info \"" + msg + "\"\n")
+
+def qute_eprint(msg):
+   with open(os.environ["QUTE_FIFO"], "w") as f:
+      f.write("message-error \"" + msg + "\"\n")
+
+def main():
+   if not "QUTE_HTML" in os.environ:
+      exit(1)
+
+   if os.path.exists(runningFile):
+      qute_eprint("Another instance of this script is already running")
+      exit(0)
+   else:
+      with open(runningFile, "a") as f:
+         pass
+      atexit.register(lambda: os.remove(runningFile))
+
+   if os.path.exists(visitedFile):
+      with open(visitedFile, "r") as vis:
+         for v in vis:
+            visited.add(v.rstrip("\n"))
+
+   with open(os.environ["QUTE_HTML"], "r") as fp:
+      soup = BeautifulSoup(fp, "html5lib")
+
+   links = map(lambda x: x.get("href"), soup.find_all("a"))
+
+   plinks = []
+   amountPlinks = 0
+   alreadySeen = 0
+   for l in links:
+      if not re.match(r"/p/", l):
+         continue
+      post = re.split(r"/", l)[2]
+      amountPlinks += 1
+      if not post in visited:
+         plinks.append(post)
+      else:
+         alreadySeen += 1
+
+   plinks_org_len = len(plinks)
+
+   if plinks_org_len == 0:
+      qute_print("{} valid links found, but nothing is new, exiting...".format(amountPlinks))
+      exit(0)
+
+   qute_print("{} valid links found, {} has already been seen, starting download...".format(amountPlinks, alreadySeen))
+
+   milestones = [0.25, 0.5, 0.75]
+   while True:
+      pro = 1 - (len(plinks) / plinks_org_len)
+      last = None
+      while len(milestones) > 0 and pro > milestones[0]:
+         last = milestones[0]
+         del milestones[0]
+      if last != None:
+         qute_print("instaall: reached {}%".format(math.floor(last*100)))
+
+      if T.active_count() < 8+1 and len(plinks) > 0:
+         thr = T.Thread(target=downloadPost, args=(plinks.pop(),))
+         thr.start()
+      elif T.active_count() == 1:
+         break
+      else:
+         sleep(0.5)
+
+   with open(visitedFile, "w") as vis:
+      for v in visited:
+         vis.write(v + "\n")
+
+   if len(failed) > 0:
+      qute_print("These failed: " + str(failed))
+      exit(1)
+   else:
+      qute_print("Successful!")
+      exit(0)
+
+if __name__ == "__main__":
+   main()

@@ -9,10 +9,10 @@ settings:
         '1': hint links userscript instaloot
         '2': hint --rapid links userscript instaloot
         '3': spawn --userscript instaloot
+        '4': spawn -u instaall
         ;I: hint images download
         ;Y: hint images yank
         ;i: hint images run open -t {hint-url}
-        ;l: hint links userscript instaloot
         <Ctrl+j>: tab-move +
         <Ctrl+k>: tab-move -
         D: spawn --userscript openurxvt
