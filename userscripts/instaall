@@ -19,7 +19,7 @@ failed = []
 runningFile = "/tmp/instaall_running"
 
 def downloadPost(post):
-   result = S.run(["instalooter", "post", post, os.environ["HOME"] + "/Pictures/instagram", "-v", "-T", "{username}.{date}.{id}"])
+   result = S.run(["instalooter", "post", "instagram.com/p/" + post, os.environ["HOME"] + "/Pictures/instagram", "-v", "-T", "{username}.{date}.{id}"])
 
    if result.returncode == 0:
       with visitedLock:
@@ -87,7 +87,7 @@ def main():
          last = milestones[0]
          del milestones[0]
       if last != None:
-         qute_print("instaall: reached {}%".format(math.floor(last*100)))
+         qute_print("reached {}%".format(math.floor(last*100)))
 
       if T.active_count() < 8+1 and len(plinks) > 0:
          thr = T.Thread(target=downloadPost, args=(plinks.pop(),))
@@ -102,8 +102,8 @@ def main():
          vis.write(v + "\n")
 
    if len(failed) > 0:
-      qute_print("These failed: " + str(failed))
-      exit(1)
+      qute_eprint("These failed: " + str(failed))
+      exit(0)
    else:
       qute_print("Successful!")
       exit(0)

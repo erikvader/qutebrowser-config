@@ -1,6 +1,6 @@
 #!/bin/bash
 
-post="$(echo "$QUTE_URL" | sed -nE 's|^https?://(www\.)?instagram\.com/p/(.+?)/.*$|\2|p')"
+post="$(echo "$QUTE_URL" | sed -nE '/^https?:\/\/(www\.)?instagram\.com\/p\/(.+?)\/.*$/p')"
 
 if [[ -z "$post" ]]; then
     echo "message-error '$QUTE_URL is not a valid url'" > "$QUTE_FIFO"
