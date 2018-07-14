@@ -6,9 +6,9 @@ settings:
   bindings.commands:
     global:
       normal:
-        '1': hint links userscript instaloot
-        '2': hint --rapid links userscript instaloot
-        '3': spawn --userscript instaloot
+        '1': hint links userscript instacurrent
+        '2': hint --rapid links userscript instacurrent
+        '3': spawn --userscript instacurrent
         '4': spawn -u instaall
         ;I: hint images download
         ;Y: hint images yank
@@ -20,6 +20,8 @@ settings:
         cm: clear-messages
         e: open-editor
         gD: spawn open_downloaded_pdf
+        gh: back --bg
+        gl: forward --bg
         j: scroll-px 0 40
         k: scroll-px 0 -40
         m: enter-mode set_mark

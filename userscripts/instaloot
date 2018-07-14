@@ -1,11 +1,180 @@
-#!/bin/bash
+#!/bin/python
 
-post="$(echo "$QUTE_URL" | sed -nE '/^https?:\/\/(www\.)?instagram\.com\/p\/(.+?)\/.*$/p')"
+import os, sys, re, math, atexit
+import threading as T
+from time import sleep
+from collections import OrderedDict
+from bs4 import BeautifulSoup
+from instalooter.looters import PostLooter
 
-if [[ -z "$post" ]]; then
-    echo "message-error '$QUTE_URL is not a valid url'" > "$QUTE_FIFO"
-    exit
-fi
 
-instalooter post "$post" "$HOME/Pictures/instagram" -v -T '{username}.{date}.{id}' 2>&1 | sed -uE 's/^(.*)$/message-info "\1"/' >> "$QUTE_FIFO"
+writeLock = T.Lock()
+statsLock = T.Lock()
+stats = {"downPic": 0, "downPost": 0, "failPost": 0, "postHad": 0}
 
+runningFile = "/tmp/instaloot_running"
+
+dest = os.path.join(os.environ["HOME"], "Pictures/instagram")
+
+cacheFile = "/tmp/instaloot_cache"
+cache = OrderedDict()
+cacheLast = -1
+
+def loadCache():
+   global cacheLast
+   if not os.path.exists(cacheFile):
+      return
+   with open(cacheFile, "r") as f:
+      for l in f:
+         cache[l.rstrip("\n")] = None
+      cacheLast = len(cache)
+
+def saveCache():
+   new_items = len(cache) - cacheLast
+   if new_items == 0:
+      return
+   with open(cacheFile, "a") as f:
+      for i, l in enumerate(reversed(cache)):
+         if i >= new_items:
+            break
+         f.write(l + "\n")
+
+def downloadPost(post):
+   looter = PostLooter(post, get_videos=True, jobs=1, template="{username}.{date}.{id}")
+   try:
+      username = looter.info['owner']['username']
+      targetPath = os.path.join(dest, username)
+      os.makedirs(targetPath, exist_ok=True)
+
+      n = looter.download(destination=targetPath, new_only=True)
+
+      with statsLock:
+         cache[post] = None
+         if n == 0:
+            stats["postHad"] += 1
+         else:
+            stats["downPic"] += n
+            stats["downPost"] += 1
+   except Exception as e:
+      with statsLock:
+         stats["failPost"] += 1
+      qute_eprint(e)
+
+def qute_print(msg):
+   with writeLock:
+      with open(os.environ["QUTE_FIFO"], "w") as f:
+         f.write("message-info \"" + msg + "\"\n")
+
+def qute_eprint(msg):
+   with writeLock:
+      with open(os.environ["QUTE_FIFO"], "w") as f:
+         f.write("message-error \"" + msg + "\"\n")
+
+def display_stats(post=None):
+   if post:
+      if stats["postHad"] > 0:
+         qute_print("{} was already downloaded".format(post))
+      elif stats["downPost"] > 0:
+         qute_print("{} was successfully downloaded!".format(post))
+      else:
+         qute_print("Error or something? post={}".format(post))
+   else:
+      qute_print("Downloaded {} new posts (total of {} pictures/clips), {} failed and {} were already downloaded".format(stats["downPost"], stats["downPic"], stats["failPost"], stats["postHad"]))
+
+def run_all():
+   if os.path.exists(runningFile):
+      qute_eprint("Another instance of this script is already running in all-mode")
+      return
+   else:
+      with open(runningFile, "a"):
+         pass
+      atexit.register(lambda: os.remove(runningFile))
+
+   with open(os.environ["QUTE_HTML"], "r") as fp:
+      soup = BeautifulSoup(fp, "html5lib")
+
+   links = map(lambda x: x.get("href"), soup.find_all("a"))
+
+   loadCache()
+
+   plinks = []
+   alreadySeen = 0
+   for l in links:
+      if not re.match(r"/p/", l):
+         continue
+      post = re.split(r"/", l)[2]
+      if post not in cache:
+         plinks.append(post)
+      else:
+         alreadySeen += 1
+
+   amountPlinks = len(plinks)
+
+   if amountPlinks == 0:
+      qute_print("No new links found :( ({} were cached)".format(alreadySeen))
+      return
+
+   qute_print("found {} valid links and {} cached links, starting download...".format(amountPlinks, alreadySeen))
+
+   milestones = [0.25, 0.5, 0.75]
+   while True:
+      pro = 1 - (len(plinks) / amountPlinks)
+      last = None
+      while milestones and pro >= milestones[0]:
+         last = milestones[0]
+         del milestones[0]
+      if last != None:
+         qute_print("reached {}%".format(math.floor(last*100)))
+
+      if T.active_count() < 8+1 and plinks:
+         thr = T.Thread(target=downloadPost, args=(plinks.pop(),))
+         thr.start()
+      elif T.active_count() == 1:
+         break
+      else:
+         sleep(0.5)
+
+   saveCache()
+   display_stats()
+
+def run_current():
+   url = os.environ["QUTE_URL"]
+   mat = re.match(r"^(https://)?(www\.)?instagram\.com/p/(.+?)(/|$)", url)
+   if not mat:
+      qute_print("{} is an invalid link :(".format(url))
+      return
+
+   post = mat.group(3)
+   loadCache()
+   if post in cache:
+      qute_print("{} was in the cache".format(post))
+      return
+   else:
+      qute_print("Downloading {}...".format(post))
+      downloadPost(post)
+      saveCache()
+      display_stats(post)
+
+
+def main():
+   if not "QUTE_HTML" in os.environ:
+      print("is this really running in qutebrowser?")
+      exit(1)
+
+   args = {}
+   for a in sys.argv[1:]:
+      if a == "--current":
+         args['current'] = True
+      elif a == "--all":
+         args['all'] = True
+
+   if args.get("current", False):
+      run_current()
+   elif args.get("all", False):
+      run_all()
+   else:
+      print("usage: instaall [--current|--all]")
+      exit(1)
+
+if __name__ == "__main__":
+   main()
