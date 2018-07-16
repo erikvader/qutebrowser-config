@@ -6,11 +6,12 @@ from time import sleep
 from collections import OrderedDict
 from bs4 import BeautifulSoup
 from instalooter.looters import PostLooter
-
+from instalooter._utils import NameGenerator
+from fcntl import lockf, LOCK_UN, LOCK_SH, LOCK_EX
 
 writeLock = T.Lock()
 statsLock = T.Lock()
-stats = {"downPic": 0, "downPost": 0, "failPost": 0, "postHad": 0}
+stats = {"downPost": 0, "downTotal": 0, "failPost": 0, "postHad": 0}
 
 runningFile = "/tmp/instaloot_running"
 
@@ -22,9 +23,10 @@ cacheLast = -1
 
 def loadCache():
    global cacheLast
-   if not os.path.exists(cacheFile):
+   if not os.path.isfile(cacheFile):
       return
    with open(cacheFile, "r") as f:
+      lockf(f, LOCK_SH)
       for l in f:
          cache[l.rstrip("\n")] = None
       cacheLast = len(cache)
@@ -34,31 +36,57 @@ def saveCache():
    if new_items == 0:
       return
    with open(cacheFile, "a") as f:
+      lockf(f, LOCK_EX)
       for i, l in enumerate(reversed(cache)):
          if i >= new_items:
             break
          f.write(l + "\n")
 
 def downloadPost(post):
-   looter = PostLooter(post, get_videos=True, jobs=1, template="{username}.{date}.{id}")
+   templ="{username}.{date}.{id}"
+   looter = PostLooter(post, get_videos=True, jobs=1, template=templ)
    try:
+      # find and create target dir
       username = looter.info['owner']['username']
       targetPath = os.path.join(dest, username)
       os.makedirs(targetPath, exist_ok=True)
 
-      n = looter.download(destination=targetPath, new_only=True)
+      # generate all target filenames and check if they exist
+      namegen = NameGenerator(templ)
+      media = next(looter.medias())
+      exists = True
+      total = 1
+      if "edge_sidecar_to_children" in media:
+         edges = media["edge_sidecar_to_children"]["edges"]
+         total = len(edges)
+         for m in edges:
+            mc = media.copy()
+            mc["id"] = m["node"]["id"]
+            name = namegen.file(mc)
+            if not os.path.isfile(os.path.join(targetPath, name)):
+               exists = False
+               break
+      else:
+         name = namegen.file(media)
+         if not os.path.isfile(os.path.join(targetPath, name)):
+            exists = False
 
+      # download
+      if not exists:
+         looter.download(destination=targetPath)
+
+      # record what happened
       with statsLock:
          cache[post] = None
-         if n == 0:
+         if exists:
             stats["postHad"] += 1
          else:
-            stats["downPic"] += n
             stats["downPost"] += 1
+            stats["downTotal"] += total
    except Exception as e:
       with statsLock:
          stats["failPost"] += 1
-      qute_eprint(e)
+      qute_eprint(str(e))
 
 def qute_print(msg):
    with writeLock:
@@ -75,20 +103,20 @@ def display_stats(post=None):
       if stats["postHad"] > 0:
          qute_print("{} was already downloaded".format(post))
       elif stats["downPost"] > 0:
-         qute_print("{} was successfully downloaded!".format(post))
+         qute_print("{} was successfully downloaded! ({} files in total)".format(post, stats["downTotal"]))
       else:
          qute_print("Error or something? post={}".format(post))
    else:
-      qute_print("Downloaded {} new posts (total of {} pictures/clips), {} failed and {} were already downloaded".format(stats["downPost"], stats["downPic"], stats["failPost"], stats["postHad"]))
+      qute_print("Downloaded {} new posts ({} files), {} failed and {} were already downloaded".format(stats["downPost"], stats["downTotal"], stats["failPost"], stats["postHad"]))
 
 def run_all():
-   if os.path.exists(runningFile):
+   try:
+      with open(runningFile, "x") as f:
+         f.write(str(os.getpid()))
+      atexit.register(lambda: os.remove(runningFile))
+   except FileExistsError:
       qute_eprint("Another instance of this script is already running in all-mode")
       return
-   else:
-      with open(runningFile, "a"):
-         pass
-      atexit.register(lambda: os.remove(runningFile))
 
    with open(os.environ["QUTE_HTML"], "r") as fp:
       soup = BeautifulSoup(fp, "html5lib")
@@ -150,7 +178,7 @@ def run_current():
       qute_print("{} was in the cache".format(post))
       return
    else:
-      qute_print("Downloading {}...".format(post))
+      # qute_print("Downloading {}...".format(post))
       downloadPost(post)
       saveCache()
       display_stats(post)
