@@ -74,7 +74,7 @@ def downloadPost(post):
 
       # generate all target filenames and check if they exist
       namegen = NameGenerator(templ)
-      media = next(looter.medias())
+      media = looter.info
       exists = True
       total = 1
       if "edge_sidecar_to_children" in media:
@@ -83,6 +83,7 @@ def downloadPost(post):
          for m in edges:
             mc = media.copy()
             mc["id"] = m["node"]["id"]
+            mc["is_video"] = m["node"]["is_video"]
             name = namegen.file(mc)
             if not os.path.isfile(os.path.join(targetPath, name)):
                exists = False
@@ -120,15 +121,21 @@ def qute_eprint(msg):
          f.write("message-error \"" + msg + "\"\n")
 
 def display_stats(post=None):
+   display_setdir = lambda: " into {}".format(setdir) if setdir else ""
    if post:
       if stats["postHad"] > 0:
-         qute_print("{} was already downloaded".format(post))
+         qute_print("{} was already downloaded{}".format(post, display_setdir()))
       elif stats["downPost"] > 0:
-         qute_print("{} was successfully downloaded! ({} files in total)".format(post, stats["downTotal"]))
+         qute_print("{} was successfully downloaded! ({} files in total){}".format(post, stats["downTotal"], display_setdir()))
       else:
-         qute_print("Error or something? post={}".format(post))
+         qute_print("Error or something? post={}, setdir={}".format(post, setdir))
    else:
-      qute_print("Downloaded {} new posts ({} files), {} failed and {} were already downloaded".format(stats["downPost"], stats["downTotal"], stats["failPost"], stats["postHad"]))
+      qute_print("Downloaded {} new posts ({} files){}, {} failed and {} were already downloaded"
+                 .format(stats["downPost"],
+                         stats["downTotal"],
+                         display_setdir(),
+                         stats["failPost"],
+                         stats["postHad"]))
 
 def run_all():
    try:
@@ -142,14 +149,14 @@ def run_all():
    with open(os.environ["QUTE_HTML"], "r") as fp:
       soup = BeautifulSoup(fp, "html5lib")
 
-   links = map(lambda x: x.get("href"), soup.find_all("a"))
+   links = filter(None, map(lambda x: x.get("href"), soup.find_all("a")))
 
    loadCache()
 
    plinks = []
    alreadySeen = 0
    for l in links:
-      if not re.match(r"/p/", l): # FIXME: expected a string sometimes?????
+      if not re.match(r"/p/", l):
          continue
       post = re.split(r"/", l)[2]
       if post not in cache:
@@ -238,9 +245,6 @@ def main():
 
    if load_setdir:
       loadSetdir()
-
-   if setdir and load_setdir:
-      qute_print("FYI using setdir=\\\"{}\\\"".format(setdir))
 
    if args.get("current", False):
       run_current()
