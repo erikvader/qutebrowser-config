@@ -10,6 +10,8 @@ settings:
         '2': hint --rapid links userscript instacurrent
         '3': spawn --userscript instacurrent
         '4': spawn -u instaall
+        '5': set-cmd-text --space :spawn -u instaloot --setdir
+        '6': :spawn -u instaloot --cleardir
         ;I: hint images download
         ;Y: hint images yank
         ;i: hint images run open -t {hint-url}

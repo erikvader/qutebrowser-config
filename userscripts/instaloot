@@ -7,7 +7,7 @@ from collections import OrderedDict
 from bs4 import BeautifulSoup
 from instalooter.looters import PostLooter
 from instalooter._utils import NameGenerator
-from fcntl import lockf, LOCK_UN, LOCK_SH, LOCK_EX
+from fcntl import lockf, LOCK_SH, LOCK_EX
 
 writeLock = T.Lock()
 statsLock = T.Lock()
@@ -20,6 +20,9 @@ dest = os.path.join(os.environ["HOME"], "Pictures/instagram")
 cacheFile = "/tmp/instaloot_cache"
 cache = OrderedDict()
 cacheLast = -1
+
+setdir = ""
+setdirFile = "/tmp/instaloot_setdir"
 
 def loadCache():
    global cacheLast
@@ -42,13 +45,31 @@ def saveCache():
             break
          f.write(l + "\n")
 
+def saveSetdir():
+   with open(setdirFile, "w") as f:
+      lockf(f, LOCK_EX)
+      f.write(setdir)
+
+def loadSetdir():
+   global setdir
+   if setdir:
+      return
+   if not os.path.isfile(setdirFile):
+      return
+   with open(setdirFile, "r") as f:
+      lockf(f, LOCK_SH)
+      setdir = f.readline()
+
 def downloadPost(post):
    templ="{username}.{date}.{id}"
    looter = PostLooter(post, get_videos=True, jobs=1, template=templ)
    try:
       # find and create target dir
       username = looter.info['owner']['username']
-      targetPath = os.path.join(dest, username)
+      if setdir:
+         targetPath = os.path.join(dest, setdir)
+      else:
+         targetPath = os.path.join(dest, username)
       os.makedirs(targetPath, exist_ok=True)
 
       # generate all target filenames and check if they exist
@@ -128,7 +149,7 @@ def run_all():
    plinks = []
    alreadySeen = 0
    for l in links:
-      if not re.match(r"/p/", l):
+      if not re.match(r"/p/", l): # FIXME: expected a string sometimes?????
          continue
       post = re.split(r"/", l)[2]
       if post not in cache:
@@ -185,23 +206,53 @@ def run_current():
 
 
 def main():
+   global setdir
+   display_usage = False
+   load_setdir = True
+
    if not "QUTE_HTML" in os.environ:
       print("is this really running in qutebrowser?")
       exit(1)
 
    args = {}
-   for a in sys.argv[1:]:
+   argv = sys.argv[1:].copy()
+   while argv:
+      a = argv.pop(0)
       if a == "--current":
          args['current'] = True
       elif a == "--all":
          args['all'] = True
+      elif a == "--setdir":
+         setdir = argv.pop(0)
+         saveSetdir()
+         load_setdir = False
+         args["setdir"] = True
+      elif a == "--cleardir":
+         setdir = ""
+         saveSetdir()
+         load_setdir = False
+         args["setdir"] = True
+      else:
+         display_usage = True
+         break
+
+   if load_setdir:
+      loadSetdir()
+
+   if setdir and load_setdir:
+      qute_print("FYI using setdir=\\\"{}\\\"".format(setdir))
 
    if args.get("current", False):
       run_current()
    elif args.get("all", False):
       run_all()
+   elif args.get("setdir", False):
+      qute_print("Updated setdir to \\\"{}\\\"".format(setdir))
    else:
-      print("usage: instaall [--current|--all]")
+      display_usage = True
+
+   if display_usage:
+      qute_print("usage: instaloot ((--setdir dir | --cleardir) | (--current | --all))")
       exit(1)
 
 if __name__ == "__main__":
