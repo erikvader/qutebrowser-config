@@ -29,6 +29,8 @@ settings:
         m: enter-mode set_mark
         wg: set-cmd-text --space :tab-give
         wt: set-cmd-text --space :tab-take
+  content.autoplay:
+    global: false
   downloads.open_dispatcher:
     global: rifle
   downloads.position:
@@ -65,6 +67,7 @@ settings:
       go: https://google.se/search?q={}
       ho: https://www.haskell.org/hoogle/?hoogle={}
       py: https://docs.python.org/3/search.html?q={}
+      pyg: https://google.se/search?q=python 3 {}
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
     global: about:blank
