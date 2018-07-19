@@ -3,11 +3,11 @@
 import os, sys, re, math, atexit
 import threading as T
 from time import sleep
-from collections import OrderedDict
 from bs4 import BeautifulSoup
 from instalooter.looters import PostLooter
 from instalooter._utils import NameGenerator
 from fcntl import lockf, LOCK_SH, LOCK_EX
+import pickle as P
 
 writeLock = T.Lock()
 statsLock = T.Lock()
@@ -18,37 +18,65 @@ runningFile = "/tmp/instaloot_running"
 dest = os.path.join(os.environ["HOME"], "Pictures/instagram")
 
 cacheFile = "/tmp/instaloot_cache"
-cache = OrderedDict()
-cacheLast = -1
+cache = set()
+cacheRemove = set()
 
 setdir = ""
 setdirFile = "/tmp/instaloot_setdir"
 
 def loadCache():
-   global cacheLast
+   global cache
    if not os.path.isfile(cacheFile):
       return
-   with open(cacheFile, "r") as f:
+   with open(cacheFile, "rb") as f:
       lockf(f, LOCK_SH)
-      for l in f:
-         cache[l.rstrip("\n")] = None
-      cacheLast = len(cache)
+      cache = P.load(f)
+
+def safeWriteOpen(filepath, fun, initf, binary=False):
+   try:
+      with open(filepath, "xb+" if binary else "x+") as f:
+         lockf(f, LOCK_EX)
+         initf(f)
+         return fun(f)
+   except FileExistsError:
+      with open(filepath, "rb+" if binary else "r+") as f:
+         lockf(f, LOCK_EX)
+         return fun(f)
 
 def saveCache():
-   new_items = len(cache) - cacheLast
-   if new_items == 0:
-      return
-   with open(cacheFile, "a") as f:
-      lockf(f, LOCK_EX)
-      for i, l in enumerate(reversed(cache)):
-         if i >= new_items:
-            break
-         f.write(l + "\n")
+   def doFile(f):
+      toDump = (cache | P.load(f)) - cacheRemove
+      f.seek(0)
+      f.truncate(0)
+      P.dump(toDump, f)
+   def initFile(f):
+      P.dump(set(), f)
+      f.seek(0)
+   safeWriteOpen(cacheFile, doFile, initFile, binary=True)
+
+def testSetCache(codes):
+   def doFile(f):
+      global cache
+      cache = P.load(f)
+      newones = [x for x in codes if x not in cache]
+      if not newones:
+         return newones
+      else:
+         cache.update(newones)
+         f.seek(0)
+         f.truncate(0)
+         P.dump(cache, f)
+         return newones
+   def initFile(f):
+      P.dump(set(), f)
+      f.seek(0)
+   return safeWriteOpen(cacheFile, doFile, initFile, binary=True)
 
 def saveSetdir():
-   with open(setdirFile, "w") as f:
-      lockf(f, LOCK_EX)
+   def doFile(f):
+      f.truncate(0)
       f.write(setdir)
+   safeWriteOpen(setdirFile, doFile, lambda f: f)
 
 def loadSetdir():
    global setdir
@@ -58,7 +86,7 @@ def loadSetdir():
       return
    with open(setdirFile, "r") as f:
       lockf(f, LOCK_SH)
-      setdir = f.readline()
+      setdir = f.read()
 
 def downloadPost(post):
    templ="{username}.{date}.{id}"
@@ -99,26 +127,32 @@ def downloadPost(post):
 
       # record what happened
       with statsLock:
-         cache[post] = None
+         # cache.add(post)
          if exists:
             stats["postHad"] += 1
          else:
             stats["downPost"] += 1
             stats["downTotal"] += total
+   # pylint: disable=broad-except
    except Exception as e:
       with statsLock:
+         cacheRemove.add(post)
          stats["failPost"] += 1
       qute_eprint(str(e))
 
-def qute_print(msg):
+def _qute_print(msg, cmd):
    with writeLock:
       with open(os.environ["QUTE_FIFO"], "w") as f:
-         f.write("message-info \"" + msg + "\"\n")
+         f.write("{} \"{}\"".format(cmd, msg))
+
+def qute_print(msg):
+   _qute_print(msg, "message-info")
 
 def qute_eprint(msg):
-   with writeLock:
-      with open(os.environ["QUTE_FIFO"], "w") as f:
-         f.write("message-error \"" + msg + "\"\n")
+   _qute_print(msg, "message-error")
+
+def qute_wprint(msg):
+   _qute_print(msg, "message-warning")
 
 def display_stats(post=None):
    display_setdir = lambda: " into {}".format(setdir) if setdir else ""
@@ -143,38 +177,38 @@ def run_all():
          f.write(str(os.getpid()))
       atexit.register(lambda: os.remove(runningFile))
    except FileExistsError:
-      qute_eprint("Another instance of this script is already running in all-mode")
+      qute_wprint("Another instance of this script is already running in all-mode")
       return
 
    with open(os.environ["QUTE_HTML"], "r") as fp:
       soup = BeautifulSoup(fp, "html5lib")
 
-   links = filter(None, map(lambda x: x.get("href"), soup.find_all("a")))
+   links = map(lambda x: x.get("href"), soup.find_all("a"))
 
-   loadCache()
-
-   plinks = []
-   alreadySeen = 0
-   for l in links:
+   def getPost(l):
+      if not l:
+         return None
       if not re.match(r"/p/", l):
-         continue
-      post = re.split(r"/", l)[2]
-      if post not in cache:
-         plinks.append(post)
-      else:
-         alreadySeen += 1
+         return None
+      return re.split(r"/", l)[2]
+
+   plinks = list(filter(None, map(getPost, links)))
+
+   notseen = testSetCache(plinks)
 
    amountPlinks = len(plinks)
+   amountNotseen = len(notseen)
+   alreadySeen = amountPlinks - amountNotseen
 
-   if amountPlinks == 0:
+   if amountNotseen == 0:
       qute_print("No new links found :( ({} were cached)".format(alreadySeen))
       return
 
-   qute_print("found {} valid links and {} cached links, starting download...".format(amountPlinks, alreadySeen))
+   qute_print("found {} valid links and {} cached links, starting download...".format(amountNotseen, alreadySeen))
 
    milestones = [0.25, 0.5, 0.75]
    while True:
-      pro = 1 - (len(plinks) / amountPlinks)
+      pro = 1 - (len(notseen) / amountNotseen)
       last = None
       while milestones and pro >= milestones[0]:
          last = milestones[0]
@@ -182,15 +216,16 @@ def run_all():
       if last != None:
          qute_print("reached {}%".format(math.floor(last*100)))
 
-      if T.active_count() < 8+1 and plinks:
-         thr = T.Thread(target=downloadPost, args=(plinks.pop(),))
+      if T.active_count() < 8+1 and notseen:
+         thr = T.Thread(target=downloadPost, args=(notseen.pop(),))
          thr.start()
       elif T.active_count() == 1:
          break
       else:
          sleep(0.5)
 
-   saveCache()
+   if cacheRemove:
+      saveCache()
    display_stats()
 
 def run_current():
@@ -201,21 +236,20 @@ def run_current():
       return
 
    post = mat.group(3)
-   loadCache()
-   if post in cache:
+   if not testSetCache([post]):
       qute_print("{} was in the cache".format(post))
       return
    else:
       # qute_print("Downloading {}...".format(post))
       downloadPost(post)
-      saveCache()
+      if cacheRemove:
+         saveCache()
       display_stats(post)
 
 
 def main():
    global setdir
    display_usage = False
-   load_setdir = True
 
    if not "QUTE_HTML" in os.environ:
       print("is this really running in qutebrowser?")
@@ -232,26 +266,28 @@ def main():
       elif a == "--setdir":
          setdir = argv.pop(0)
          saveSetdir()
-         load_setdir = False
          args["setdir"] = True
       elif a == "--cleardir":
          setdir = ""
          saveSetdir()
-         load_setdir = False
          args["setdir"] = True
       else:
          display_usage = True
          break
 
-   if load_setdir:
+   if "setdir" not in args:
       loadSetdir()
 
-   if args.get("current", False):
+   if "current" in args:
       run_current()
-   elif args.get("all", False):
+   elif "all" in args:
       run_all()
-   elif args.get("setdir", False):
-      qute_print("Updated setdir to \\\"{}\\\"".format(setdir))
+   elif "setdir" in args:
+      if setdir:
+         isdir = os.path.isdir(os.path.join(dest, setdir))
+         qute_print("Updated setdir to{} \\\"{}\\\"".format(" existing" if isdir else "", setdir))
+      else:
+         qute_print("Cleared setdir")
    else:
       display_usage = True
 
