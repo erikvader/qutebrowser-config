@@ -45,6 +45,8 @@ settings:
     - (goto-line {line})
     - -e
     - (move-to-column {column0})
+  input.insert_mode.auto_leave:
+    global: true
   scrolling.bar:
     global: true
   statusbar.widgets:
@@ -57,7 +59,9 @@ settings:
   tabs.background:
     global: true
   tabs.last_close:
-    global: close
+    global: blank
+  tabs.select_on_remove:
+    global: prev
   url.default_page:
     global: about:blank
   url.searchengines:
