@@ -18,9 +18,9 @@ settings:
         <Ctrl+j>: tab-move +
         <Ctrl+k>: tab-move -
         D: spawn --userscript openurxvt
-        E: set-cmd-text :spawn -d google-chrome-stable {url}
+        e: set-cmd-text :spawn -d google-chrome-stable {url}
         cm: clear-messages
-        e: open-editor
+        E: open-editor
         gD: spawn open_downloaded_pdf
         gh: back --bg
         gl: forward --bg
@@ -61,7 +61,7 @@ settings:
   tabs.last_close:
     global: blank
   tabs.select_on_remove:
-    global: prev
+    global: last-used
   url.default_page:
     global: about:blank
   url.searchengines:

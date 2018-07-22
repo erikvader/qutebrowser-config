@@ -24,13 +24,13 @@ cacheRemove = set()
 setdir = ""
 setdirFile = "/tmp/instaloot_setdir"
 
-def loadCache():
-   global cache
-   if not os.path.isfile(cacheFile):
-      return
-   with open(cacheFile, "rb") as f:
-      lockf(f, LOCK_SH)
-      cache = P.load(f)
+# def loadCache():
+#    global cache
+#    if not os.path.isfile(cacheFile):
+#       return
+#    with open(cacheFile, "rb") as f:
+#       lockf(f, LOCK_SH)
+#       cache = P.load(f)
 
 def safeWriteOpen(filepath, fun, initf, binary=False):
    try:
