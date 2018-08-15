@@ -6,6 +6,8 @@ settings:
   bindings.commands:
     global:
       normal:
+        ',j': tab-close --next
+        ',k': tab-close --prev
         '1': hint links userscript instacurrent
         '2': hint --rapid links userscript instacurrent
         '3': spawn --userscript instacurrent
@@ -17,11 +19,14 @@ settings:
         ;i: hint images run open -t {hint-url}
         <Ctrl+j>: tab-move +
         <Ctrl+k>: tab-move -
+        <Space>j: tab-close --next
+        <Space>k: tab-close --prev
         D: spawn --userscript openurxvt
         E: set-cmd-text :spawn -d google-chrome-stable {url}
         cm: clear-messages
+        d: tab-close
         e: open-editor
-        gD: spawn open_downloaded_pdf
+        gD: download-open
         gh: back --bg
         gl: forward --bg
         j: scroll-px 0 40

@@ -138,7 +138,7 @@ def downloadPost(post):
       with statsLock:
          cacheRemove.add(post)
          stats["failPost"] += 1
-      qute_eprint(str(e))
+      qute_eprint(repr(e) + " : " + post)
 
 def _qute_print(msg, cmd):
    with writeLock:
