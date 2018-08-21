@@ -50,6 +50,10 @@ settings:
     - (goto-line {line})
     - -e
     - (move-to-column {column0})
+  fonts.monospace:
+    global: '"DejaVu Sans Mono", "xos4 Terminus", Terminus, Monospace, Monaco, "Bitstream
+      Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", monospace,
+      Fixed, Consolas, Terminal'
   input.insert_mode.auto_leave:
     global: true
   scrolling.bar:
