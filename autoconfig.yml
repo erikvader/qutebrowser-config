@@ -19,8 +19,6 @@ settings:
         ;i: hint images run open -t {hint-url}
         <Ctrl+j>: tab-move +
         <Ctrl+k>: tab-move -
-        <Space>j: tab-close --next
-        <Space>k: tab-close --prev
         D: spawn --userscript openurxvt
         E: set-cmd-text :spawn -d google-chrome-stable {url}
         cm: clear-messages
