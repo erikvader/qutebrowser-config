@@ -80,6 +80,7 @@ settings:
       ddg: https://duckduckgo.com/?q={}
       go: https://google.se/search?q={}
       ho: https://www.haskell.org/hoogle/?hoogle={}
+      mal: https://myanimelist.net/search/all?q={}
       py: https://docs.python.org/3/search.html?q={}
       pyg: https://google.se/search?q=python 3 {}
       yt: https://www.youtube.com/results?search_query={}
