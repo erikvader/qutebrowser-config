@@ -37,6 +37,10 @@ settings:
         x: spawn --detach mpv --ytdl-format=bestvideo[height<=1080]+bestaudio {url}
   content.autoplay:
     global: false
+  content.host_blocking.whitelist:
+    global:
+    - piwik.org
+    - thepiratebay.org
   downloads.open_dispatcher:
     global: rifle
   downloads.position:
