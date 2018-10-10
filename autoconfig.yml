@@ -37,6 +37,8 @@ settings:
         x: spawn --detach mpv --ytdl-format=bestvideo[height<=1080]+bestaudio {url}
   content.autoplay:
     global: false
+  content.cookies.accept:
+    global: all
   content.host_blocking.whitelist:
     global:
     - piwik.org
