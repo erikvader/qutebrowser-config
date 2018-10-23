@@ -83,7 +83,7 @@ settings:
   url.searchengines:
     global:
       DEFAULT: https://google.se/search?q={}
-      ddg: https://duckduckgo.com/?q={}
+      dd: https://duckduckgo.com/?q={}
       giphy: https://giphy.com/search/{}
       go: https://google.se/search?q={}
       ho: https://www.haskell.org/hoogle/?hoogle={}
