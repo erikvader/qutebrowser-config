@@ -90,6 +90,7 @@ settings:
       mal: https://myanimelist.net/search/all?q={}
       py: https://docs.python.org/3/search.html?q={}
       pyg: https://google.se/search?q=python 3 {}
+      rd: https://doc.rust-lang.org/std/index.html?search={}
       yt: https://www.youtube.com/results?search_query={}
   url.start_pages:
     global: about:blank
