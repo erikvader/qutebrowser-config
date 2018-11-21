@@ -35,6 +35,7 @@ settings:
         wg: set-cmd-text --space :tab-give
         wt: set-cmd-text --space :tab-take
         x: spawn --detach mpv --ytdl-format=bestvideo[height<=1080]+bestaudio {url}
+        za: config-cycle --temp --print content.autoplay True False
   content.autoplay:
     global: false
   content.cookies.accept:
