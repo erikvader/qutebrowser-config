@@ -37,7 +37,8 @@ settings:
         x: spawn --detach mpv --ytdl-format=bestvideo[height<=1080]+bestaudio {url}
         za: config-cycle --temp --print content.autoplay True False
   content.autoplay:
-    global: false
+    '*://*.youtube.com/*': false
+    global: true
   content.cookies.accept:
     global: all
   content.host_blocking.whitelist:
