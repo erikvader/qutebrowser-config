@@ -17,8 +17,8 @@ settings:
         ;I: hint images download
         ;Y: hint images yank
         ;i: hint images run open -t {hint-url}
-        ;x: hint links spawn --detach mpv --ytdl-format=bestvideo[height<=1080]+bestaudio
-          {hint-url}
+        ;v: hint links userscript ytdl
+        ;x: hint links userscript openmpv
         <Ctrl+j>: tab-move +
         <Ctrl+k>: tab-move -
         D: spawn --userscript openurxvt
@@ -34,7 +34,7 @@ settings:
         m: enter-mode set_mark
         wg: set-cmd-text --space :tab-give
         wt: set-cmd-text --space :tab-take
-        x: spawn --detach mpv --ytdl-format=bestvideo[height<=1080]+bestaudio {url}
+        x: spawn --userscript openmpv
         za: config-cycle --temp --print content.autoplay True False
   content.autoplay:
     '*://*.youtube.com/*': false

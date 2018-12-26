@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+DLDIR="$HOME/Videos"
+cd "$DLDIR"
+echo "message-info 'starting download of $QUTE_URL'" > "$QUTE_FIFO"
+if youtube-dl --merge-output-format mkv --write-thumbnail --no-playlist --max-downloads 1 "$QUTE_URL"; then
+    echo "message-info 'downloaded successfully to $DLDIR'" > "$QUTE_FIFO"
+else
+    echo "message-error 'download failed'" > "$QUTE_FIFO"
+fi
