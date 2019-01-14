@@ -98,3 +98,24 @@ settings:
     global: about:blank
   window.title_format:
     global: '{perc}{title}'
+  zoom.default:
+    global: 100%
+  zoom.levels:
+    global:
+    - 25%
+    - 33%
+    - 50%
+    - 60%
+    - 67%
+    - 75%
+    - 90%
+    - 100%
+    - 110%
+    - 125%
+    - 150%
+    - 175%
+    - 200%
+    - 250%
+    - 300%
+    - 400%
+    - 500%
