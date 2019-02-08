@@ -61,23 +61,23 @@ ESC_BIND = 'clear-keychain ;; search ;; fullscreen --leave'
 c.bindings.default['normal'] = {}
 c.bindings.commands['normal'] = {
    # Navigation
-   '<ctrl-j>': 'scroll-px 0 40',
-   '<ctrl-k>': 'scroll-px 0 -40',
-   '<ctrl-d>': 'scroll-page 0 0.5',
-   '<ctrl-u>': 'scroll-page 0 -0.5',
-   '<alt-g>': 'scroll-to-perc 0',
+   '<ctrl-j>':      'scroll-px 0 40',
+   '<ctrl-k>':      'scroll-px 0 -40',
+   '<ctrl-d>':      'scroll-page 0 0.5',
+   '<ctrl-u>':      'scroll-page 0 -0.5',
+   '<alt-g>':       'scroll-to-perc 0',
    '<alt-shift-g>': 'scroll-to-perc',
 
    # Commands
-   '<ctrl-r>': 'reload',
+   '<ctrl-r>':       'reload',
    '<ctrl-shift-r>': 'reload -f',
 
    '<ctrl-x><ctrl-c>': 'quit',
-   '<alt-x>': 'set-cmd-text :',
-   '<ctrl-x>b': 'set-cmd-text -s :buffer',
-   '<ctrl-x>k': 'tab-close',
-   '<ctrl-x>h': 'set-cmd-text -s :help',
-   '<ctrl-x>d': 'download-clear',
+   '<alt-x>':          'set-cmd-text :    ',
+   '<ctrl-x>b':        'set-cmd-text -s : buffer',
+   '<ctrl-x>k':        'tab-close',
+   '<ctrl-x>h':        'set-cmd-text -s : help',
+   '<ctrl-x>d':        'download-clear',
    '<ctrl-x><ctrl-r>': 'config-source',
 
    # searching
@@ -90,22 +90,22 @@ c.bindings.commands['normal'] = {
    '<ctrl-0>': 'zoom 100',
 
    # marks
-   '<ctrl-m>': 'enter-mode set_mark',
+   '<ctrl-m>':  'enter-mode set_mark',
    '<ctrl-\'>': 'enter-mode jump_mark',
 
    # hinting
    '<ctrl-f>': 'hint all',
-   '<alt-f>': 'hint all tab-bg',
+   '<alt-f>':  'hint all tab-bg',
 
    # history
    '<ctrl-l>': 'forward',
    '<ctrl-h>': 'back',
 
    # tabs
-   '<alt-j>': 'tab-next',
-   '<alt-k>': 'tab-prev',
-   '<ctrl-w>': 'tab-close',
-   '<ctrl-t>': 'open -t',
+   '<alt-j>':   'tab-next',
+   '<alt-k>':   'tab-prev',
+   '<ctrl-w>':  'tab-close',
+   '<ctrl-t>':  'open -t',
    '<ctrl-x>u': 'undo',
 
    # windows
@@ -121,10 +121,10 @@ c.bindings.commands['normal'] = {
    '<alt-b>':        'set-cmd-text -s :quickmark-load -t',
 
    # clipboard
-   '<ctrl-p>': 'open -- {clipboard}',
+   '<ctrl-p>':       'open -- {clipboard}',
    '<ctrl-shift-p>': 'open -t -- {clipboard}',
-   '<alt-p>': 'open -t -- {clipboard}',
-   '<ctrl-y>': 'yank',
+   '<alt-p>':        'open -t -- {clipboard}',
+   '<ctrl-y>':       'yank',
 
    # editing
    # '<ctrl-f>': 'fake-key <Right>',
@@ -158,9 +158,13 @@ c.bindings.commands['normal'] = {
    '<ctrl-g>': ESC_BIND,
 
    # userscripts
-   '<ctrl-x>y': 'hint links userscript ytdl',
+   '<ctrl-x>Y': 'hint links userscript ytdl',
+   '<ctrl-x>y': 'spawn --userscript ytdl',
+
    '<ctrl-x>M': 'hint links userscript openmpv',
    '<ctrl-x>m': 'spawn --userscript openmpv',
+
+   '<ctrl-x>n': 'spawn --userscript nhentaidl'
 
 }
 
@@ -189,3 +193,7 @@ c.bindings.commands['caret'] = {
    # escape hatch
    '<ctrl-g>': 'leave-mode',
 }
+
+################################ bort med yt ad ###############################
+yt_ad_js = 'Array.prototype.slice.call(document.getElementsByClassName("ytp-ad-overlay-slot")).map(x => x.style.display = "None")'
+config.bind("<ctrl-x>a", "jseval -q {}".format(yt_ad_js))
