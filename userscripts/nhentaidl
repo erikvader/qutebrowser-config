@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+DLDIR="$HOME/Downloads"
+
+id=$(sed -nE 's|^https?://nhentai.net/g/([0-9]+)/$|\1|p' <<< "$QUTE_URL")
+if [[ -z $id ]]; then
+    echo "message-warning 'not a valid url: $QUTE_URL'" >> "$QUTE_FIFO"
+fi
+
+echo "message-info 'starting download of $id'" >> "$QUTE_FIFO"
+
+if nhentai --id="$id" --nohtml --output="$DLDIR"; then
+    echo "message-info 'success'" >> "$QUTE_FIFO"
+else
+    echo "message-error 'something went wrong'" >>"$QUTE_FIFO"
+fi
