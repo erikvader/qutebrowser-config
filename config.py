@@ -79,6 +79,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>h':        'set-cmd-text -s : help',
    '<ctrl-x>d':        'download-clear',
    '<ctrl-x><ctrl-r>': 'config-source',
+   '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
 
    # searching
    '<ctrl-s>': 'set-cmd-text /',
