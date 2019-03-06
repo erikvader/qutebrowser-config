@@ -41,12 +41,6 @@ c.fonts.monospace = '"DejaVu Sans Mono", "xos4 Terminus", Terminus, Monospace, M
 ################################ emacs bindings ###############################
 
 # Bindings for normal mode
-# config.bind('1', 'hint links userscript instacurrent')
-# config.bind('2', 'hint --rapid links userscript instacurrent')
-# config.bind('3', 'spawn --userscript instacurrent')
-# config.bind('4', 'spawn -u instaall')
-# config.bind('5', 'set-cmd-text --space :spawn -u instaloot --setdir')
-# config.bind('6', ':spawn -u instaloot --cleardir')
 
 # disable insert mode completely
 c.input.insert_mode.auto_enter = False
@@ -78,6 +72,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>k':        'tab-close',
    '<ctrl-x>h':        'set-cmd-text -s : help',
    '<ctrl-x>d':        'download-clear',
+   '<ctrl-x>c':        'clear-messages',
    '<ctrl-x><ctrl-r>': 'config-source',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
 
@@ -165,7 +160,14 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>M': 'hint links userscript openmpv',
    '<ctrl-x>m': 'spawn --userscript openmpv',
 
-   '<ctrl-x>n': 'spawn --userscript nhentaidl'
+   '<ctrl-x>n': 'spawn --userscript nhentaidl',
+
+   '<ctrl-x>1': 'hint links userscript instacurrent',
+   '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
+   '<ctrl-x>3': 'spawn --userscript instacurrent',
+   '<ctrl-x>4': 'spawn -u instaall',
+   '<ctrl-x>5': 'set-cmd-text --space :spawn -u instaloot --setdir',
+   '<ctrl-x>6': ':spawn -u instaloot --cleardir'
 
 }
 
