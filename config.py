@@ -19,11 +19,12 @@ c.statusbar.widgets = ['keypress', 'url', 'history', 'tabs', 'progress']
 c.tabs.background = True
 c.tabs.last_close = 'blank'
 c.tabs.select_on_remove = 'last-used'
+c.tabs.new_position.stacking = False
 c.url.default_page = 'about:blank'
 c.url.searchengines = {
    'DEFAULT': 'https://google.se/search?q={}',
    'dd':      'https://duckduckgo.com/?q={}',
-   'giphy':   'https://giphy.com/search/{}',
+   'gif':     'https://giphy.com/search/{}',
    'go':      'https://google.se/search?q={}',
    'ho':      'https://www.haskell.org/hoogle/?hoogle={}',
    'mal':     'https://myanimelist.net/search/all?q={}',
@@ -37,6 +38,7 @@ c.window.title_format = '{perc}{title}'
 c.zoom.default = '100%'
 c.zoom.levels = ['25%', '33%', '50%', '60%', '67%', '75%', '90%', '100%', '110%', '125%', '150%', '175%', '200%', '250%', '300%', '400%', '500%']
 c.fonts.monospace = '"DejaVu Sans Mono", "xos4 Terminus", Terminus, Monospace, Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", monospace, Fixed, Consolas, Terminal'
+c.completion.open_categories = ["quickmarks", "bookmarks", "history"]
 
 ################################ emacs bindings ###############################
 
