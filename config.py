@@ -75,8 +75,9 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>h':        'set-cmd-text -s : help',
    '<ctrl-x>d':        'download-clear',
    '<ctrl-x>c':        'clear-messages',
-   '<ctrl-x><ctrl-r>': 'config-source',
+   '<ctrl-x><ctrl-r>': 'config-source;; message-info "reloaded config"',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
+   '<ctrl-x>i':        'inspector',
 
    # searching
    '<ctrl-s>': 'set-cmd-text /',
@@ -113,6 +114,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-o>':       'set-cmd-text -s :open',
    '<ctrl-shift-o>': 'set-cmd-text -s :open -t',
    '<alt-o>':        'set-cmd-text -s :open -t',
+   '<ctrl-x>o':      'set-cmd-text :open {url:pretty}',
 
    '<ctrl-b>':       'set-cmd-text -s :quickmark-load',
    '<ctrl-shift-b>': 'set-cmd-text -s :quickmark-load -t',
@@ -123,6 +125,10 @@ c.bindings.commands['normal'] = {
    '<ctrl-shift-p>': 'open -t -- {clipboard}',
    '<alt-p>':        'open -t -- {clipboard}',
    '<ctrl-y>':       'yank',
+
+   # macro
+   '<ctrl-x>q': 'record-macro',
+   '<ctrl-x>@': 'run-macro',
 
    # editing
    # '<ctrl-f>': 'fake-key <Right>',
