@@ -168,7 +168,10 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>M': 'hint links userscript openmpv',
    '<ctrl-x>m': 'spawn --userscript openmpv',
 
-   '<ctrl-x>n': 'spawn --userscript nhentaidl',
+   '<ctrl-x>nn': 'spawn --userscript nhentai_tools --download',
+   '<ctrl-x>ne': 'spawn --userscript nhentai_tools --exists',
+   '<ctrl-x>na': 'spawn --userscript nhentai_tools --add',
+   '<ctrl-x>nr': 'spawn --userscript nhentai_tools --random',
 
    '<ctrl-x>1': 'hint links userscript instacurrent',
    '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
