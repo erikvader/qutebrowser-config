@@ -31,7 +31,8 @@ c.url.searchengines = {
    'py':      'https://docs.python.org/3/search.html?q={}',
    'pyg':     'https://google.se/search?q=python 3 {}',
    'rd':      'https://doc.rust-lang.org/std/index.html?search={}',
-   'yt':      'https://www.youtube.com/results?search_query={}'
+   'yt':      'https://www.youtube.com/results?search_query={}',
+   'ri':      'https://images.google.com/searchbyimage?image_url={}'
 }
 c.url.start_pages = 'about:blank'
 c.window.title_format = '{perc}{title}'
@@ -160,6 +161,7 @@ c.bindings.commands['normal'] = {
 
    # escape hatch
    '<ctrl-g>': ESC_BIND,
+   '<Escape>': ESC_BIND,
 
    # userscripts
    '<ctrl-x>Y': 'hint links userscript ytdl',
@@ -196,16 +198,19 @@ c.bindings.commands['command'] = {
 
    # escape hatch
    '<ctrl-g>': 'leave-mode',
+   '<Escape>': 'leave-mode'
 }
 
 c.bindings.commands['hint'] = {
    # escape hatch
    '<ctrl-g>': 'leave-mode',
+   '<Escape>': 'leave-mode'
 }
 
 c.bindings.commands['caret'] = {
    # escape hatch
    '<ctrl-g>': 'leave-mode',
+   '<Escape>': 'leave-mode'
 }
 
 ################################ bort med yt ad ###############################
