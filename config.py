@@ -69,7 +69,6 @@ c.bindings.commands['normal'] = {
    '<ctrl-r>':       'reload',
    '<ctrl-shift-r>': 'reload -f',
 
-   '<ctrl-x><ctrl-c>': 'quit',
    '<alt-x>':          'set-cmd-text :    ',
    '<ctrl-x>b':        'set-cmd-text -s : buffer',
    '<ctrl-x>k':        'tab-close',
