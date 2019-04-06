@@ -13,6 +13,10 @@ c.content.cookies.accept = 'all'
 c.content.host_blocking.whitelist = ['thepiratebay.org']
 c.downloads.open_dispatcher = 'rifle'
 c.downloads.position = 'bottom'
+c.downloads.location.remember = False
+c.downloads.location.suggestion = "both"
+c.downloads.location.directory = "~/Downloads"
+c.downloads.remove_finished = 5000
 c.editor.command = ['emacsclient', '-c', '-e', '(find-file "{file}")', '-e', '(goto-line {line})', '-e', '(move-to-column {column0})']
 c.scrolling.bar = 'always'
 c.statusbar.widgets = ['keypress', 'url', 'history', 'tabs', 'progress']
@@ -31,8 +35,7 @@ c.url.searchengines = {
    'py':      'https://docs.python.org/3/search.html?q={}',
    'pyg':     'https://google.se/search?q=python 3 {}',
    'rd':      'https://doc.rust-lang.org/std/index.html?search={}',
-   'yt':      'https://www.youtube.com/results?search_query={}',
-   'ri':      'https://images.google.com/searchbyimage?image_url={}'
+   'yt':      'https://www.youtube.com/results?search_query={}'
 }
 c.url.start_pages = 'about:blank'
 c.window.title_format = '{perc}{title}'
@@ -179,7 +182,9 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>3': 'spawn --userscript instacurrent',
    '<ctrl-x>4': 'spawn -u instaall',
    '<ctrl-x>5': 'set-cmd-text --space :spawn -u instaloot --setdir',
-   '<ctrl-x>6': ':spawn -u instaloot --cleardir'
+   '<ctrl-x>6': ':spawn -u instaloot --cleardir',
+
+   '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}'
 
 }
 
