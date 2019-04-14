@@ -15,7 +15,6 @@ c.downloads.open_dispatcher = 'rifle'
 c.downloads.position = 'bottom'
 c.downloads.location.remember = False
 c.downloads.location.suggestion = "both"
-c.downloads.location.directory = "~/Downloads"
 c.downloads.remove_finished = 5000
 c.editor.command = ['emacsclient', '-c', '-e', '(find-file "{file}")', '-e', '(goto-line {line})', '-e', '(move-to-column {column0})']
 c.scrolling.bar = 'always'
