@@ -129,8 +129,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-y>':       'yank',
 
    # macro
-   '<ctrl-x>q': 'record-macro',
-   '<ctrl-x>@': 'run-macro',
+   # '<ctrl-x>q': 'record-macro',
+   # '<ctrl-x>@': 'run-macro',
 
    # editing
    # '<ctrl-f>': 'fake-key <Right>',
