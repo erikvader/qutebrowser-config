@@ -80,6 +80,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x><ctrl-r>': 'config-source;; message-info "reloaded config"',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
    '<ctrl-x>i':        'inspector',
+   '<ctrl-x>v':        'enter-mode passthrough',
 
    # searching
    '<ctrl-s>': 'set-cmd-text /',
@@ -219,3 +220,7 @@ c.bindings.commands['caret'] = {
 ################################ bort med yt ad ###############################
 yt_ad_js = 'Array.prototype.slice.call(document.getElementsByClassName("ytp-ad-overlay-slot")).map(x => x.style.display = "None")'
 config.bind("<ctrl-x>a", "jseval -q {}".format(yt_ad_js))
+
+############################# massa fake-bindings #############################
+from string import ascii_lowercase
+c.bindings.commands['normal'].update({"<ctrl-q>{}".format(l): "fake-key <ctrl-{}>".format(l) for l in ascii_lowercase})
