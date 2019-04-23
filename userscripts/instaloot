@@ -6,7 +6,7 @@ from time import sleep
 from bs4 import BeautifulSoup
 from instalooter.looters import PostLooter
 from instalooter._utils import NameGenerator
-from fcntl import lockf, LOCK_SH, LOCK_EX
+from fcntl import lockf, LOCK_SH, LOCK_EX # TODO: ändra till flock
 import pickle as P
 
 writeLock = T.Lock()

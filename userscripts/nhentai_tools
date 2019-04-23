@@ -6,6 +6,8 @@ import re
 import argparse
 import random
 import sys
+from fcntl import flock, LOCK_EX
+from contextlib import contextmanager
 
 class InvalidUrlException(Exception):
    pass
@@ -22,6 +24,7 @@ toreadfinder = re.compile(r"^https?://nhentai\.net/g/([0-9]+)/$") # find id from
 
 def send_to_qute(x):
    with open(FIFO, "w") as p:
+      flock(p, LOCK_EX)
       p.write("{}\n".format(x))
 
 def message(msg):
@@ -32,24 +35,28 @@ def downloaded_files():
       for f in it:
          yield f
 
-def read_toread():
-   with open(TOREAD, "r") as f:
-      for l in f:
-         yield l.rstrip("\n")
+@contextmanager
+def with_toread():
+   with open(TOREAD, "r+") as f:
+      flock(f, LOCK_EX)
+      ids = {get_first_group(x.rstrip("\n"), toreadfinder) for x in f}
+      org = ids.copy()
 
-def write_toread(ids, format_lines=True):
-   with open(TOREAD, "w") as f:
-      for i in ids:
-         if format_lines:
-            f.write("https://nhentai.net/g/{}/\n".format(i))
-         else:
-            f.write("{}\n".format(i))
+      yield ids
+
+      fmt = "https://nhentai.net/g/{}/\n"
+      if ids > org:
+         f.seek(0, 2) #goto end
+         for i in ids - org:
+            f.write(fmt.format(i))
+      elif ids != org:
+         f.seek(0, 0) #goto beginning
+         f.truncate()
+         for i in ids:
+            f.write(fmt.format(i))
 
 def get_first_group(name, reg):
    return reg.sub(r"\1", name)
-
-def get_toread_ids():
-   return {get_first_group(x, toreadfinder) for x in read_toread()}
 
 def get_downloaded_ids():
    return {get_first_group(x.name, idfinder) for x in downloaded_files()}
@@ -61,115 +68,60 @@ def get_qute_id():
 
    return get_first_group(QUTE_URL, toreadfinder)
 
-
-# def verify_zip(files, faultynum):
-#    if len(files) <= faultynum:
-#       return False
-
-#    ints = {int(extremover.sub(r"\1", x)) for x in files}
-
-#    for i in range(1, len(files)+1):
-#       if i not in ints:
-#          return False
-
-#    return True
-
-# def verify(hentaidir, faultynum):
-#    found = False
-#    for f in walk(hentaidir):
-#       with zipfile.ZipFile(f) as zf:
-#          names = zf.namelist()
-#          if not verify_zip(names, faultynum):
-#             print(get_first_group(f.name, idfinder))
-#             found = True
-
-#    if not found:
-#       print("everything seems fine!")
-
-# def duplicate(hentaidir):
-#    found = set()
-#    dup_found = False
-#    for f in walk(hentaidir):
-#       i = get_first_group(f.name, idfinder)
-#       if i in found:
-#          print(i)
-#          dup_found = True
-#       else:
-#          found.add(i)
-
-#    if not dup_found:
-#       print("didn't find any duplicates")
-
 def toread_random():
-   toread_ids = list(read_toread())
-   if not toread_ids:
-      message("file empty")
-      return
+   with with_toread() as ids:
+      if not ids:
+         message("file empty")
+         return
 
-   random.shuffle(toread_ids)
-   r = toread_ids.pop()
-   send_to_qute("open {}".format(r))
-   write_toread(toread_ids, format_lines=False)
-
-# def toread_clean(hentaidir, file):
-#    db_ids = {get_first_group(x.name, idfinder) for x in walk(hentaidir)}
-#    toread_ids = [get_first_group(x, toreadfinder) for x in read_toread(file)]
-
-#    keep = set(toread_ids) - db_ids
-
-#    write_toread(file, keep)
-
-#    print("removed {} entries".format(len(toread_ids) - len(keep)))
+      r = random.sample(ids, 1)[0]
+      ids.remove(r)
+      send_to_qute("open https://nhentai.net/g/{}/".format(r))
 
 def check_existance():
    db_ids = get_downloaded_ids()
-   toread_ids = get_toread_ids()
    try:
       hid = get_qute_id()
    except InvalidUrlException:
       return
+   with with_toread() as ids:
+      res = ""
 
-   res = ""
+      if hid in db_ids:
+         res = "is downloaded"
 
-   if hid in db_ids:
-      res = "is downloaded"
+      if hid in ids:
+         if res:
+            res += " and "
+         res += "is planned to be read"
 
-   if hid in toread_ids:
       if res:
-         res += " and "
-      res += "is planned to be read"
-
-   if res:
-      message(res)
-   else:
-      message("never seen before")
+         message(res)
+      else:
+         message("never seen before")
 
 def add_toread():
-   toread_ids = get_toread_ids()
-   db_ids = get_downloaded_ids()
    try:
       hid = get_qute_id()
    except InvalidUrlException:
       return
 
-   if hid in toread_ids:
-      message("{} is already added".format(hid))
-   elif hid in db_ids:
-      message("{} is already downloaded, no need".format(hid))
-   else:
-      with open(TOREAD, "a") as f:
-         f.write("{}\n".format(QUTE_URL))
-      message("added {}".format(hid))
+   with with_toread() as ids:
+      if hid in ids:
+         message("{} is already added".format(hid))
+      elif hid in get_downloaded_ids():
+         message("{} is already downloaded, no need".format(hid))
+      else:
+         ids.add(hid)
+         message("added {}".format(hid))
 
 def download():
-   toread_ids = get_toread_ids()
-   db_ids = get_downloaded_ids()
    try:
       hid = get_qute_id()
    except InvalidUrlException:
       return
 
-   if hid in db_ids:
+   if hid in get_downloaded_ids():
       message("{} is already downloaded".format(hid))
       return
 
@@ -180,10 +132,10 @@ def download():
                "--nohtml",
                "--rm-origin-dir",
                "--output={}".format(HENTAIDIR)
-              ],
-              stdout=P.PIPE,
-              stderr=P.PIPE,
-              text=True)
+            ],
+            stdout=P.PIPE,
+            stderr=P.PIPE,
+            text=True)
 
    fp.check_returncode()
 
@@ -197,9 +149,9 @@ def download():
       if warningerror.match(l) and not l.endswith("does not exist, creating."):
          message(l)
 
-   if hid in toread_ids:
-      toread_ids.remove(hid)
-      write_toread(toread_ids, format_lines=True)
+   with with_toread() as ids:
+      if hid in ids:
+         ids.remove(hid)
 
    message("done with {}".format(hid))
 
@@ -214,17 +166,14 @@ def main():
 
    parser = argparse.ArgumentParser(description="some things to organize nhentai chapters")
 
-   # subparsers = parser.add_subparsers(required=True,dest="subcommand")
-
-   # parser_verify = subparsers.add_parser("verify", help="check for potentially faulty downloaded chapters")
-   # parser_verify.add_argument("-n", "--num", default=10, help="maximum amount of pages to consider a chapter as faulty")
-
+   parser.add_argument("url", nargs="?", default=QUTE_URL)
    parser.add_argument("--add", action="store_true", help="add to toread")
    parser.add_argument("--exists", action="store_true", help="check if we have seen this thing before")
    parser.add_argument("--random", action="store_true", help="open a new chapter from toread")
    parser.add_argument("--download", action="store_true", help="download current chapter")
 
    args = parser.parse_args()
+   QUTE_URL = args.url
 
    if args.add:
       add_toread()
