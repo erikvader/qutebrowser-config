@@ -225,3 +225,4 @@ config.bind("<ctrl-x>a", "jseval -q {}".format(yt_ad_js))
 ############################# massa fake-bindings #############################
 from string import ascii_lowercase
 c.bindings.commands['normal'].update({"<ctrl-q>{}".format(l): "fake-key <ctrl-{}>".format(l) for l in ascii_lowercase})
+c.bindings.commands['normal']['<ctrl-q><Escape>'] = "fake-key <Escape>"
