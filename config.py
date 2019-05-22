@@ -11,6 +11,7 @@ with config.pattern('*://*.youtube.com/*') as p:
 
 c.content.cookies.accept = 'all'
 c.content.host_blocking.whitelist = ['thepiratebay.org']
+c.content.javascript.can_access_clipboard = True
 c.downloads.open_dispatcher = 'rifle'
 c.downloads.position = 'bottom'
 c.downloads.location.remember = False
@@ -78,6 +79,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>d':        'download-clear',
    '<ctrl-x>c':        'clear-messages',
    '<ctrl-x><ctrl-r>': 'config-source;; message-info "reloaded config"',
+   '<ctrl-x>r':        'tab-close ;; undo',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
    '<ctrl-x>i':        'inspector',
    '<ctrl-x>v':        'enter-mode passthrough',
@@ -176,7 +178,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>ne': 'spawn --userscript nhentai_tools --exists',
    '<ctrl-x>na': 'spawn --userscript nhentai_tools --add',
    '<ctrl-x>nr': 'spawn --userscript nhentai_tools --random',
-   '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add ;; tab-close",
+   '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add", # TODO: debug chain with tab-close
 
    '<ctrl-x>1': 'hint links userscript instacurrent',
    '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
