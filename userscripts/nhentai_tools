@@ -28,7 +28,7 @@ def send_to_qute(x):
       p.write("{}\n".format(x))
 
 def message(msg):
-   send_to_qute("message-info '{}'".format(msg.translate({"'": None, '"': None})))
+   send_to_qute("message-info '{}'".format(msg.translate("".maketrans("", "", "\"'"))))
 
 def downloaded_files():
    with os.scandir(HENTAIDIR) as it:

@@ -143,7 +143,7 @@ def downloadPost(post):
 def _qute_print(msg, cmd):
    with writeLock:
       with open(os.environ["QUTE_FIFO"], "w") as f:
-         f.write("{} \"{}\"".format(cmd, msg))
+         f.write("{} '{}'\n".format(cmd, msg.translate("".maketrans("", "", "\"'"))))
 
 def qute_print(msg):
    _qute_print(msg, "message-info")
