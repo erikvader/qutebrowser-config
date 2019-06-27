@@ -6,7 +6,7 @@ from time import sleep
 from bs4 import BeautifulSoup
 from instalooter.looters import PostLooter
 from instalooter._utils import NameGenerator
-from fcntl import lockf, LOCK_SH, LOCK_EX # TODO: ändra till flock
+from fcntl import flock, LOCK_SH, LOCK_EX
 import pickle as P
 
 writeLock = T.Lock()
@@ -35,12 +35,12 @@ setdirFile = "/tmp/instaloot_setdir"
 def safeWriteOpen(filepath, fun, initf, binary=False):
    try:
       with open(filepath, "xb+" if binary else "x+") as f:
-         lockf(f, LOCK_EX)
+         flock(f, LOCK_EX)
          initf(f)
          return fun(f)
    except FileExistsError:
       with open(filepath, "rb+" if binary else "r+") as f:
-         lockf(f, LOCK_EX)
+         flock(f, LOCK_EX)
          return fun(f)
 
 def saveCache():
@@ -85,13 +85,13 @@ def loadSetdir():
    if not os.path.isfile(setdirFile):
       return
    with open(setdirFile, "r") as f:
-      lockf(f, LOCK_SH)
+      flock(f, LOCK_SH)
       setdir = f.read()
 
 def downloadPost(post):
    templ="{username}.{date}.{id}"
-   looter = PostLooter(post, get_videos=True, jobs=1, template=templ)
    try:
+      looter = PostLooter(post, get_videos=True, jobs=1, template=templ)
       # find and create target dir
       username = looter.info['owner']['username']
       if setdir:
