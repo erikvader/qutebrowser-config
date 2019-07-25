@@ -38,7 +38,7 @@ c.url.searchengines = {
    'yt':      'https://www.youtube.com/results?search_query={}'
 }
 c.url.start_pages = 'about:blank'
-c.window.title_format = '{perc}{title}'
+c.window.title_format = '{perc}{current_title}'
 c.zoom.default = '100%'
 c.zoom.levels = ['25%', '33%', '50%', '60%', '67%', '75%', '90%', '100%', '110%', '125%', '150%', '175%', '200%', '250%', '300%', '400%', '500%']
 c.fonts.monospace = '"DejaVu Sans Mono", "xos4 Terminus", Terminus, Monospace, Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", monospace, Fixed, Consolas, Terminal'
