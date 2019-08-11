@@ -12,6 +12,7 @@ with config.pattern('*://*.youtube.com/*') as p:
 c.content.cookies.accept = 'all'
 c.content.host_blocking.whitelist = ['thepiratebay.org']
 c.content.javascript.can_access_clipboard = True
+c.content.notifications = False
 c.downloads.open_dispatcher = 'rifle'
 c.downloads.position = 'bottom'
 c.downloads.location.remember = False
