@@ -4,7 +4,7 @@ set -e
 DLDIR="$HOME/Videos/yt"
 cd "$DLDIR"
 echo "message-info 'starting download of $QUTE_URL'" > "$QUTE_FIFO"
-if youtube-dl --format 'bestvideo[height<=1080]+bestaudio/best[height<=1080]' --merge-output-format mkv --write-thumbnail --no-playlist --max-downloads 1 "$QUTE_URL"; then
+if youtube-dl --format 'bestvideo[height<=1080]+bestaudio/best[height<=1080]/bestvideo+bestaudio/best' --merge-output-format mkv --write-thumbnail --no-playlist --max-downloads 1 "$QUTE_URL"; then
     echo "message-info 'downloaded successfully to $DLDIR'" > "$QUTE_FIFO"
 else
     echo "message-error 'download failed'" > "$QUTE_FIFO"
