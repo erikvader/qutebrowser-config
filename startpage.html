@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Start Page</title>
+  </head>
+  <body>
+    <style>
+      body {
+          background-color: #444444;
+          background-image: url("startpage_image");
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: center;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+      }
+      #clock {
+          text-align: center;
+          font-size: 100px;
+          text-shadow: 2px 2px #ffffff, -2px -2px #ffffff, 2px -2px #ffffff, -2px 2px #ffffff;
+      }
+    </style>
+    <div id="clock"></div>
+    <script>
+      let setTime = function() {
+          document.getElementById("clock").innerHTML = new Date().toLocaleTimeString(
+              undefined,
+              {
+                  hour12: false,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: undefined
+              });
+      };
+      setTime();
+      setInterval(setTime, 9000);
+    </script>
+  </body>
+</html>
