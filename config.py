@@ -179,7 +179,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>ne': 'spawn --userscript nhentai_tools --exists',
    '<ctrl-x>na': 'spawn --userscript nhentai_tools --add',
    '<ctrl-x>nr': 'spawn --userscript nhentai_tools --random',
-   '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add", # TODO: debug chain with tab-close
+   '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add",
 
    '<ctrl-x>1': 'hint links userscript instacurrent',
    '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
