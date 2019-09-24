@@ -1,14 +1,18 @@
 #!/bin/bash
 
-mpvargs=('--ytdl-format=bestvideo[height<=1080]+bestaudio/best[height<=1080]/bestvideo+bestaudio/best')
+mpvargs=('--ytdl-format=bestvideo[height<=1080]+bestaudio/best[height<=1080]/bestvideo+bestaudio/best'
+         '--msg-level=all=error')
 domain=.youtube.com
 
 if [[ "$QUTE_URL" = *"$domain"* ]]; then
     tmp=$(mktemp --tmpdir 'openmpv.XXXXXX')
-    "$QUTE_CONFIG_DIR/userscripts/print_cookies" "$QUTE_DATA_DIR/webengine/Cookies" "$domain" > "$tmp"
     trap "rm -f '$tmp'" EXIT
-    mpvargs+=("--ytdl-raw-options=cookies=$tmp,mark-watched=")
-    echo "message-info 'Passing cookies to youtube-dl'" >> "$QUTE_FIFO"
+    if "$QUTE_CONFIG_DIR/userscripts/print_cookies" "$QUTE_DATA_DIR/webengine/Cookies" "$domain" > "$tmp"; then
+        mpvargs+=("--ytdl-raw-options=cookies=$tmp,mark-watched=")
+        echo "message-info 'Passing cookies to youtube-dl'" >> "$QUTE_FIFO"
+    else
+        echo "message-warning 'Couldnt pass cookies, ignoring...'" >> "$QUTE_FIFO"
+    fi
 fi
 
 mpv "${mpvargs[@]}" "$QUTE_URL"
