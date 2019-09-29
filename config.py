@@ -95,8 +95,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-0>': 'zoom 100',
 
    # marks
-   '<ctrl-m>':  'enter-mode set_mark',
-   '<ctrl-\'>': 'enter-mode jump_mark',
+   # '<ctrl-m>':  'enter-mode set_mark',
+   # '<ctrl-\'>': 'enter-mode jump_mark',
 
    # hinting
    '<ctrl-f>': 'hint all',
@@ -191,6 +191,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}'
 
 }
+
+c.bindings.commands['normal']['<ctrl-m>'] = c.bindings.commands['normal']['<ctrl-x>M']
 
 c.bindings.commands['normal'].update({'<alt-{}>'.format(i): 'tab-focus {}'.format(i) for i in range(1,10)})
 
