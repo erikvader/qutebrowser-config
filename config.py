@@ -110,6 +110,7 @@ c.bindings.commands['normal'] = {
    '<alt-j>':   'tab-next',
    '<alt-k>':   'tab-prev',
    '<ctrl-w>':  'tab-close',
+   '<ctrl-e>':  'tab-close --next',
    '<ctrl-t>':  'open -t',
    '<ctrl-x>u': 'undo',
 
