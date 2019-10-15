@@ -36,20 +36,22 @@ def downloaded_files():
          yield f
 
 @contextmanager
-def with_toread():
+def with_toread(aslist=False):
    with open(TOREAD, "r+") as f:
       flock(f, LOCK_EX)
-      ids = {get_first_group(x.rstrip("\n"), toreadfinder) for x in f}
+      ids = [get_first_group(x.rstrip("\n"), toreadfinder) for x in f]
       org = ids.copy()
+      if not aslist:
+         ids = set(ids)
 
       yield ids
 
+      if not aslist:
+         order_keys = {e: i for i,e in enumerate(org)}
+         ids = sorted(ids, key=lambda x: order_keys.get(x, len(org)))
+
       fmt = "https://nhentai.net/g/{}/\n"
-      if ids > org:
-         f.seek(0, 2) #goto end
-         for i in ids - org:
-            f.write(fmt.format(i))
-      elif ids != org:
+      if ids != org:
          f.seek(0, 0) #goto beginning
          f.truncate()
          for i in ids:
@@ -115,6 +117,14 @@ def add_toread():
          ids.add(hid)
          message("added {}".format(hid))
 
+def undo():
+   with with_toread(aslist=True) as ids:
+      if not ids:
+         message("file empty")
+         return
+      hid = ids.pop()
+      message("removed {}".format(hid))
+
 def download():
    try:
       hid = get_qute_id()
@@ -171,6 +181,7 @@ def main():
    parser.add_argument("--exists", action="store_true", help="check if we have seen this thing before")
    parser.add_argument("--random", action="store_true", help="open a new chapter from toread")
    parser.add_argument("--download", action="store_true", help="download current chapter")
+   parser.add_argument("--undo", action="store_true", help="remove latest addition to toread")
 
    args = parser.parse_args()
    QUTE_URL = args.url
@@ -183,6 +194,8 @@ def main():
       toread_random()
    elif args.download:
       download()
+   elif args.undo:
+      undo()
 
 if __name__ == "__main__":
    main()
