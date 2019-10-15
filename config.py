@@ -44,6 +44,7 @@ c.zoom.default = '100%'
 c.zoom.levels = ['25%', '33%', '50%', '60%', '67%', '75%', '90%', '100%', '110%', '125%', '150%', '175%', '200%', '250%', '300%', '400%', '500%']
 c.fonts.monospace = '"DejaVu Sans Mono", "xos4 Terminus", Terminus, Monospace, Monaco, "Bitstream Vera Sans Mono", "Andale Mono", "Courier New", Courier, "Liberation Mono", monospace, Fixed, Consolas, Terminal'
 c.completion.open_categories = ["quickmarks", "bookmarks", "history"]
+c.hints.selectors["magnets"] = ["[href^=\"magnet:\"]"]
 
 ################################ emacs bindings ###############################
 
@@ -175,6 +176,8 @@ c.bindings.commands['normal'] = {
 
    '<ctrl-x>M': 'hint links userscript openmpv',
    '<ctrl-x>m': 'spawn --userscript openmpv',
+
+   '<ctrl-x>t': 'hint magnets userscript torrentdownload',
 
    '<ctrl-x>nn': 'spawn --userscript nhentai_tools --download',
    '<ctrl-x>ne': 'spawn --userscript nhentai_tools --exists',

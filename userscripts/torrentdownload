@@ -1,0 +1,10 @@
+#!/bin/bash
+
+path=$( ( jq -r '.download_location_paths_list[]?' "$HOME/.config/deluge/core.conf"; echo other ) | fzf_dmenu --prompt="Download: ")
+
+if [[ $path = other ]]; then
+    # hopefully runs deluge in some way
+    xdg-open "$QUTE_URL"
+elif [[ -n $path ]]; then
+    deluge-console "add -p \"$path\" \"$QUTE_URL\""
+fi
