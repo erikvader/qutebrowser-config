@@ -3,32 +3,33 @@
 set -e
 
 LATESTFILE=/tmp/quterorrentdownloadlatest
-ANIME=$HOME/Anime/anime
 
-path=$( ( [[ -f $LATESTFILE ]] && cat "$LATESTFILE"; jq -r '.download_location_paths_list[]?' "$HOME/.config/deluge/core.conf"; echo anime; echo other ) | fzf_dmenu --prompt="Download: ")
-
-if [[ $path = anime ]]; then
-    name=$(fzf_dmenu -- 'Name of anime:')
-    if [[ -z $name ]]; then
-        echo message-info "'Aborted adding new anime'" > "$QUTE_FIFO"
-        exit
-    fi
-    path="$ANIME/$name"
-    if [[ -e $path && ! -d $path ]]; then
-        echo message-error "'Path exists and is not a directory, aborting'" > "$QUTE_FIFO"
-        exit
-    fi
-    if [[ ! -d $path ]]; then
-        mkdir "$path"
-    fi
-fi
+path=$( ( [[ -f $LATESTFILE ]] && cat "$LATESTFILE"; jq -r '.download_location_paths_list[]?' "$HOME/.config/deluge/core.conf"; echo other ) | fzf_dmenu --prompt="Download: ")
 
 if [[ $path = other ]]; then
     echo message-info "'Starting graphical deluge'" > "$QUTE_FIFO"
     deluge-gtk "$QUTE_URL"
 elif [[ -n $path ]]; then
+    if [[ $path = latest:* ]]; then
+        path=${path#latest:*}
+    else
+        name=$(fzf_dmenu -- 'subfolder: ')
+        if [[ -n $name ]]; then
+            path="$path/$name"
+            if [[ -e $path && ! -d $path ]]; then
+                echo message-error "'Path exists and is not a directory, aborting'" > "$QUTE_FIFO"
+                exit
+            fi
+            if [[ ! -d $path ]]; then
+                mkdir "$path"
+            fi
+        fi
+    fi
+
     echo message-info "'Starting deluge-console...'" > "$QUTE_FIFO"
     deluge-console "add -p \"$path\" \"$QUTE_URL\""
     echo message-info "'...added'" > "$QUTE_FIFO"
-    echo "$path" > "$LATESTFILE"
+    echo "latest:$path" > "$LATESTFILE"
+else
+    echo message-error "'Aborted'" > "$QUTE_FIFO"
 fi
