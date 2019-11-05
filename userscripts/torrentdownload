@@ -11,11 +11,11 @@ if [[ $path = other ]]; then
     deluge-gtk "$QUTE_URL"
 elif [[ -n $path ]]; then
     if [[ $path = latest:* ]]; then
-        path=${path#latest:*}
+        path=${path#latest:}
     else
-        name=$(fzf_dmenu -- 'subfolder: ')
+        name=$(cd "$path"; fzf_dmenu -- 'subfolder: ')
         if [[ -n $name ]]; then
-            path="$path/$name"
+            path="$path/${name%%/}"
             if [[ -e $path && ! -d $path ]]; then
                 echo message-error "'Path exists and is not a directory, aborting'" > "$QUTE_FIFO"
                 exit
