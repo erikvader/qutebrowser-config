@@ -26,10 +26,14 @@ elif [[ -n $path ]]; then
         fi
     fi
 
-    echo message-info "'Starting deluge-console...'" > "$QUTE_FIFO"
-    deluge-console "add -p \"$path\" \"$QUTE_URL\""
-    echo message-info "'...added'" > "$QUTE_FIFO"
-    echo "latest:$path" > "$LATESTFILE"
+    if pgrep -x deluged &>/dev/null; then
+        echo message-info "'Starting deluge-console...'" > "$QUTE_FIFO"
+        deluge-console "add -p \"$path\" \"$QUTE_URL\""
+        echo message-info "'...added'" > "$QUTE_FIFO"
+        echo "latest:$path" > "$LATESTFILE"
+    else
+        echo message-error "'deluged is not running, aborting...'" > "$QUTE_FIFO"
+    fi
 else
     echo message-error "'Aborted'" > "$QUTE_FIFO"
 fi
