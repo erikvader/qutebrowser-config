@@ -102,7 +102,6 @@ c.bindings.commands['normal'] = {
    # hinting
    '<ctrl-f>': 'hint all',
    '<alt-f>':  'hint all tab-bg',
-   '<ctrl-z>': 'hint images download',
 
    # history
    '<ctrl-l>': 'forward',
