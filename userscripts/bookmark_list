@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+BOOKMARKS=$QUTE_CONFIG_DIR/bookmarks/urls
+TMPFILE=$(mktemp)
+trap 'rm -f "$TMPFILE"' EXIT
+
+cp "$BOOKMARKS" "$TMPFILE"
+
+emacsclient -c "$TMPFILE"
+
+dif=$(comm -23 <(sort "$BOOKMARKS") <(sort "$TMPFILE"))
+
+if [[ -z $dif ]]; then
+    echo message-info '"did not change anything"' > "$QUTE_FIFO"
+else
+    printf 'message-info "removed %d bookmarks"\n' "$(wc -l <<< "$dif")" > "$QUTE_FIFO"
+    while IFS=' ' read -r url title; do
+        echo bookmark-del "$url" > "$QUTE_FIFO"
+    done <<< "$dif"
+fi
+

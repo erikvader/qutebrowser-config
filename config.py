@@ -74,10 +74,9 @@ c.bindings.commands['normal'] = {
    '<ctrl-r>':       'reload',
    '<ctrl-shift-r>': 'reload -f',
 
-   '<alt-x>':          'set-cmd-text :    ',
-   '<ctrl-x>b':        'set-cmd-text -s : buffer',
+   '<alt-x>':          'set-cmd-text :',
    '<ctrl-x>k':        'tab-close',
-   '<ctrl-x>h':        'set-cmd-text -s : help',
+   '<ctrl-x>h':        'set-cmd-text -s :help',
    '<ctrl-x>d':        'download-clear',
    '<ctrl-x>c':        'clear-messages',
    '<ctrl-x><ctrl-r>': 'config-source;; message-info "reloaded config"',
@@ -89,6 +88,10 @@ c.bindings.commands['normal'] = {
    # searching
    '<ctrl-s>': 'set-cmd-text /',
    # '<ctrl-r>': 'set-cmd-text ?',
+
+   # bookmarks
+   '<ctrl-x>b': 'spawn --userscript bookmark_list',
+   '<ctrl-x>B': 'bookmark-add',
 
    # zoom
    '<ctrl-+>': 'zoom-in',
