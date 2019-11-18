@@ -10,14 +10,18 @@ cp "$BOOKMARKS" "$TMPFILE"
 
 emacsclient -c "$TMPFILE"
 
-dif=$(comm -23 <(sort "$BOOKMARKS") <(sort "$TMPFILE"))
+removed=$(comm -23 <(sort "$BOOKMARKS") <(sort "$TMPFILE"))
+added=$(comm   -13 <(sort "$BOOKMARKS") <(sort "$TMPFILE"))
 
-if [[ -z $dif ]]; then
+if [[ -z $removed && -z $added ]]; then
     echo message-info '"did not change anything"' > "$QUTE_FIFO"
 else
-    printf 'message-info "removed %d bookmarks"\n' "$(wc -l <<< "$dif")" > "$QUTE_FIFO"
     while IFS=' ' read -r url title; do
         echo bookmark-del "$url" > "$QUTE_FIFO"
-    done <<< "$dif"
+    done <<< "$removed"
+
+    while IFS=' ' read -r url title; do
+        echo bookmark-add "$url" "\"$title\"" > "$QUTE_FIFO"
+    done <<< "$added"
 fi
 
