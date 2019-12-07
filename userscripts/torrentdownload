@@ -13,9 +13,9 @@ elif [[ -n $path ]]; then
     if [[ $path = latest:* ]]; then
         path=${path#latest:}
     else
-        name=$(cd "$path"; fzf_dmenu -- 'subfolder: ')
+        name=$(cd "$path"; fzf_dmenu -- -p 'subfolder: ' -i .)
         if [[ -n $name ]]; then
-            path="$path/${name%%/}"
+            path=$(realpath "$path/$name")
             if [[ -e $path && ! -d $path ]]; then
                 echo message-error "'Path exists and is not a directory, aborting'" > "$QUTE_FIFO"
                 exit
@@ -23,6 +23,9 @@ elif [[ -n $path ]]; then
             if [[ ! -d $path ]]; then
                 mkdir "$path"
             fi
+        else
+            echo message-error "'Aborted'" > "$QUTE_FIFO"
+            exit
         fi
     fi
 
