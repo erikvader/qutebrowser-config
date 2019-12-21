@@ -139,15 +139,14 @@ def download():
    fp = P.run(["nhentai",
                "--id={}".format(hid),
                "--cbz",
-               "--nohtml",
+               "--no-html",
                "--rm-origin-dir",
                "--output={}".format(HENTAIDIR)
             ],
             stdout=P.PIPE,
             stderr=P.PIPE,
-            text=True)
-
-   fp.check_returncode()
+            text=True,
+            check=False)
 
    if fp.stderr:
       for l in fp.stderr.split("\n"):
@@ -155,9 +154,12 @@ def download():
       raise Exception("nhentai downloader wrote something to stderr")
 
    warningerror = re.compile(r".*\[(WARNING|ERROR)\]")
+   ignoreerrors = ["does not exist, creating.", "`nhentai --cookie` to set your cookie"]
    for l in fp.stdout.split("\n"):
-      if warningerror.match(l) and not l.endswith("does not exist, creating."):
+      if warningerror.match(l) and not any(l.endswith(x) for x in ignoreerrors):
          message(l)
+
+   fp.check_returncode()
 
    with with_toread() as ids:
       if hid in ids:
