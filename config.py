@@ -1,4 +1,6 @@
-# -*- eval: (flycheck-mode 0); -*-
+# make pylint and pyflakes stop giving errors all over the file
+c = c
+config = config
 
 # Uncomment this to still load settings configured via autoconfig.yml
 # config.load_autoconfig()
