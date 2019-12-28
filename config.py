@@ -1,7 +1,3 @@
-# make pylint and pyflakes stop giving errors all over the file
-c = c
-config = config
-
 # Uncomment this to still load settings configured via autoconfig.yml
 # config.load_autoconfig()
 
@@ -39,6 +35,7 @@ c.url.searchengines = {
    'py':      'https://docs.python.org/3/search.html?q={}',
    'pyg':     'https://google.se/search?q=python 3 {}',
    'rd':      'https://doc.rust-lang.org/std/index.html?search={}',
+   'drs':     'https://docs.rs/releases/search?query={}',
    'yt':      'https://www.youtube.com/results?search_query={}'
 }
 c.window.title_format = '{perc}{current_title}'
