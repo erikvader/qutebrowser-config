@@ -29,15 +29,16 @@ c.url.searchengines = {
    'DEFAULT': 'https://google.se/search?q={}',
    'dd':      'https://duckduckgo.com/?q={}',
    'gif':     'https://giphy.com/search/{}',
-   'go':      'https://google.se/search?q={}',
    'ho':      'https://www.haskell.org/hoogle/?hoogle={}',
    'mal':     'https://myanimelist.net/search/all?q={}',
    'py':      'https://docs.python.org/3/search.html?q={}',
    'pyg':     'https://google.se/search?q=python 3 {}',
    'rd':      'https://doc.rust-lang.org/std/index.html?search={}',
    'drs':     'https://docs.rs/releases/search?query={}',
+   'nyaa':    'https://nyaa.si/?q={}',
    'yt':      'https://www.youtube.com/results?search_query={}'
 }
+c.url.searchengines['go'] = c.url.searchengines['DEFAULT']
 c.window.title_format = '{perc}{current_title}'
 c.zoom.default = '100%'
 c.zoom.levels = ['25%', '33%', '50%', '60%', '67%', '75%', '90%', '100%', '110%', '125%', '150%', '175%', '200%', '250%', '300%', '400%', '500%']
