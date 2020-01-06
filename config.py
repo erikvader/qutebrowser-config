@@ -81,6 +81,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>c':        'clear-messages',
    '<ctrl-x><ctrl-r>': 'config-source;; message-info "reloaded config"',
    '<ctrl-x>r':        'tab-close ;; undo',
+   '<ctrl-2>':         'tab-close ;; undo',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
    '<ctrl-x>i':        'inspector',
    '<ctrl-x>v':        'enter-mode passthrough',
@@ -112,6 +113,7 @@ c.bindings.commands['normal'] = {
 
    # tabs
    '<alt-j>':   'tab-next',
+   '<ctrl-3>':  'tab-next',
    '<alt-k>':   'tab-prev',
    '<ctrl-w>':  'tab-close',
    '<ctrl-e>':  'tab-close --next',
