@@ -91,8 +91,8 @@ c.bindings.commands['normal'] = {
    # '<ctrl-r>': 'set-cmd-text ?',
 
    # bookmarks
-   '<ctrl-x>b': 'spawn --userscript bookmark_list',
-   '<ctrl-x>B': 'bookmark-add',
+   '<ctrl-x><ctrl-b>': 'spawn --userscript bookmark_list',
+   '<ctrl-x>b': 'bookmark-add',
 
    # zoom
    '<ctrl-+>': 'zoom-in',

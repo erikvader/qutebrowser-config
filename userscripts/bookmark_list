@@ -16,11 +16,11 @@ added=$(comm   -13 <(sort "$BOOKMARKS") <(sort "$TMPFILE"))
 if [[ -z $removed && -z $added ]]; then
     echo message-info '"did not change anything"' > "$QUTE_FIFO"
 else
-    while IFS=' ' read -r url title; do
+    while IFS=' ' read -r url title && [[ -n $url ]]; do
         echo bookmark-del "$url" > "$QUTE_FIFO"
     done <<< "$removed"
 
-    while IFS=' ' read -r url title; do
+    while IFS=' ' read -r url title && [[ -n $url ]]; do
         echo bookmark-add "$url" "\"$title\"" > "$QUTE_FIFO"
     done <<< "$added"
 fi
