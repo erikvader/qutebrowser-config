@@ -27,10 +27,9 @@ c.url.default_page = str(config.configdir / "startpage.html") # NOTE: recommende
 c.url.start_pages = c.url.default_page
 c.url.searchengines = {
    'DEFAULT': 'https://duckduckgo.com/?q={}',
-   'go':      'https://google.se/search?q={}',
-   '!nyaa':    'https://nyaa.si/?q={}',
+   '!go':      'https://google.se/search?q={}',
+   '!nyaa':    'https://nyaa.si/?q={}'
 }
-c.url.searchengines['dd'] = c.url.searchengines['DEFAULT']
 c.window.title_format = '{perc}{current_title}'
 c.zoom.default = '100%'
 c.zoom.levels = ['25%', '33%', '50%', '60%', '67%', '75%', '90%', '100%', '110%', '125%', '150%', '175%', '200%', '250%', '300%', '400%', '500%']
