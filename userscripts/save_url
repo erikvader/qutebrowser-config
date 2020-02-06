@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "$QUTE_URL" >> /tmp/qute_save_url
+echo message-info "'saved $QUTE_URL'" > "$QUTE_FIFO"

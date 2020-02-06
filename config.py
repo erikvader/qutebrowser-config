@@ -129,6 +129,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-shift-p>': 'open -t -- {clipboard}',
    '<alt-p>':        'open -t -- {clipboard}',
    '<ctrl-y>':       'yank',
+   '<alt-y>':        'spawn --userscript save_url',
 
    # macro
    # '<ctrl-x>q': 'record-macro',
