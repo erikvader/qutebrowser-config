@@ -25,11 +25,23 @@ c.tabs.select_on_remove = 'last-used'
 c.tabs.new_position.stacking = False
 c.url.default_page = str(config.configdir / "startpage.html") # NOTE: recommended way to access?
 c.url.start_pages = c.url.default_page
+
 c.url.searchengines = {
-   'DEFAULT': 'https://duckduckgo.com/?q={}',
-   '!go':      'https://google.se/search?q={}',
-   '!nyaa':    'https://nyaa.si/?q={}'
+   'DEFAULT': 'https://duckduckgo.com/?q={}'
 }
+# NOTE: recommended way to access?
+with open(str(config.configdir / "engines"), "r") as f:
+   for line in f:
+      line = line.strip()
+      if line == "" or line.startswith("#"):
+         continue
+      middle = line.index(" ")
+      key = line[:middle]
+      url = line[middle+1:]
+      if key == "DEFAULT":
+         url = c.url.searchengines[url]
+      c.url.searchengines[key] = url
+
 c.window.title_format = '{perc}{current_title}'
 c.zoom.default = '100%'
 c.zoom.levels = ['25%', '33%', '50%', '60%', '67%', '75%', '90%', '100%', '110%', '125%', '150%', '175%', '200%', '250%', '300%', '400%', '500%']

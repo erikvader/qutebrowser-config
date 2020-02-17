@@ -1,0 +1,24 @@
+# general purpose search engines
+go https://google.se/search?q={}
+dd https://duckduckgo.com/?q={}
+
+# recreation
+yt https://www.youtube.com/results?search_query={}
+
+# programming language docs
+pyg https://google.se/search?q=python 3 {}
+py https://docs.python.org/3/search.html?q={}
+
+ho https://www.haskell.org/hoogle/?hoogle={}
+
+rd https://doc.rust-lang.org/std/index.html?search={}
+drs https://docs.rs/releases/search?query={}
+
+# anime
+nyaa https://nyaa.si/?q={}
+mal https://myanimelist.net/search/all?q={}
+
+# other
+gif https://giphy.com/search/{}
+
+DEFAULT dd
