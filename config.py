@@ -200,8 +200,6 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
    '<ctrl-x>3': 'spawn --userscript instacurrent',
    '<ctrl-x>4': 'spawn -u instaall',
-   '<ctrl-x>5': 'set-cmd-text --space :spawn -u instaloot --setdir',
-   '<ctrl-x>6': ':spawn -u instaloot --cleardir',
 
    '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}'
 
