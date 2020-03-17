@@ -84,7 +84,7 @@ def downloadPosts(urls):
       qute_print("Already downloaded all {} links".format(len(urls)))
       return
 
-   qute_print("Has seen {} before".format(len(urls) - len(newones)))
+   qute_print("Found {} links, I have seen {} before".format(len(urls), len(urls) - len(newones)))
 
    dups = 0
    succ = 0
@@ -116,9 +116,9 @@ def downloadPosts(urls):
          text=True)
 
       for line in proc.stdout:
-         if line.startswith("#"):
+         if line.startswith("# "):
             dups += 1
-            qute_print("dup: {}".format(line.rstrip()))
+            qute_print(" dup: {}".format(line.rstrip()[2:]))
          elif line.startswith(dest):
             succ += 1
             qute_print("succ: {}".format(line.rstrip()))
@@ -133,7 +133,7 @@ def downloadPosts(urls):
       if error:
          removeFromCache(newones)
 
-      qute_print("links={}, dups={}, succ={}".format(len(newones), dups, succ))
+      qute_print("Downloaded {} new files and {} files already existed ({} links)".format(succ, dups, len(newones)))
 
 def run_all():
    try:
@@ -150,13 +150,17 @@ def run_all():
    hrefs = (h.get("href") for h in soup.find_all("a") if h)
    links = ["https://instagram.com" + l for l in hrefs if l and l.startswith("/p/")]
 
+   if not links:
+      qute_wprint("Found no valid links")
+      return
+
    downloadPosts(links)
 
 def run_current():
    url = os.environ["QUTE_URL"]
    mat = re.match(r"^(https://)?(www\.)?instagram\.com/p/(.+?)(/|$)", url)
    if not mat:
-      qute_print("{} is an invalid link :(".format(url))
+      qute_wprint("{} is an invalid link :(".format(url))
       return
 
    downloadPosts([url])
