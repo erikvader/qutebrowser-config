@@ -2,6 +2,10 @@
 go https://google.se/search?q={}
 dd https://duckduckgo.com/?q={}
 
+# wiki-sites
+wi https://en.wikipedia.org/w/index.php?search={}
+lat https://en.wikibooks.org/w/index.php?search={}
+
 # recreation
 yt https://www.youtube.com/results?search_query={}
 
