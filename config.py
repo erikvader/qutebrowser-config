@@ -193,6 +193,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>ne': 'spawn --userscript nhentai_tools --exists',
    '<ctrl-x>na': 'spawn --userscript nhentai_tools --add',
    '<ctrl-x>nr': 'spawn --userscript nhentai_tools --random',
+   '<ctrl-x>nd': 'spawn --userscript nhentai_tools --remove',
    '<ctrl-x>nu': 'spawn --userscript nhentai_tools --undo',
    '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add",
 

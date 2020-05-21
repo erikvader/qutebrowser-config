@@ -117,6 +117,19 @@ def add_toread():
          ids.add(hid)
          message("added {}".format(hid))
 
+def remove_toread():
+   try:
+      hid = get_qute_id()
+   except InvalidUrlException:
+      return
+
+   with with_toread() as ids:
+      if hid in ids:
+         message("removing {} from toread".format(hid))
+         ids.remove(hid)
+      else:
+         message("nothing to remove")
+
 def undo():
    with with_toread(aslist=True) as ids:
       if not ids:
@@ -184,6 +197,7 @@ def main():
    parser.add_argument("--random", action="store_true", help="open a new chapter from toread")
    parser.add_argument("--download", action="store_true", help="download current chapter")
    parser.add_argument("--undo", action="store_true", help="remove latest addition to toread")
+   parser.add_argument("--remove", action="store_true", help="remove current chapter from toread")
 
    args = parser.parse_args()
    QUTE_URL = args.url
@@ -198,6 +212,8 @@ def main():
       download()
    elif args.undo:
       undo()
+   elif args.remove:
+      remove_toread()
 
 if __name__ == "__main__":
    main()
