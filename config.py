@@ -189,6 +189,8 @@ c.bindings.commands['normal'] = {
 
    '<ctrl-x>t': 'hint magnets userscript torrentdownload',
 
+   '<ctrl-x>a': 'spawn --userscript random_anime',
+
    '<ctrl-x>nn': 'spawn --userscript nhentai_tools --download',
    '<ctrl-x>ne': 'spawn --userscript nhentai_tools --exists',
    '<ctrl-x>na': 'spawn --userscript nhentai_tools --add',
@@ -236,10 +238,6 @@ c.bindings.commands['caret'] = {
    '<ctrl-g>': 'leave-mode',
    '<Escape>': 'leave-mode'
 }
-
-################################ bort med yt ad ###############################
-yt_ad_js = 'Array.prototype.slice.call(document.getElementsByClassName("ytp-ad-overlay-slot")).map(x => x.style.display = "None")'
-config.bind("<ctrl-x>a", "jseval -q {}".format(yt_ad_js))
 
 ############################# massa fake-bindings #############################
 from string import ascii_lowercase
