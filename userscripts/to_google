@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "$QUTE_URL" | sed -En 's/^.*q=([^&]+).*$/open go \1/p' > "$QUTE_FIFO"

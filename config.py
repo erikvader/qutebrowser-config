@@ -204,7 +204,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>3': 'spawn --userscript instacurrent',
    '<ctrl-x>4': 'spawn -u instaall',
 
-   '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}'
+   # '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}'
+   '<ctrl-x>g': 'spawn --userscript to_google'
 
 }
 
