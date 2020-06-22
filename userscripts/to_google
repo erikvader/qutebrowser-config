@@ -1,3 +1,11 @@
 #!/bin/sh
 
-echo "$QUTE_URL" | sed -En 's/^.*q=([^&]+).*$/open go \1/p' > "$QUTE_FIFO"
+echo "$QUTE_URL" | sed -En \
+'s/^.*q=([^&]+).*$/open go \1/
+T fail
+y/+/ /
+p
+b
+: fail
+c message-warning "only werkz on duckduckgo"
+p' > "$QUTE_FIFO"
