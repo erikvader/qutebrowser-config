@@ -1,9 +1,10 @@
 #!/bin/sh
 
+engine=$(sed -n '/^go/ { s/^go //; s/{}$//; p }' < "$QUTE_CONFIG_DIR/engines")
+
 echo "$QUTE_URL" | sed -En \
-'s/^.*q=([^&]+).*$/open go \1/
+'s|^.*q=([^&]+).*$|open '"$engine"'\1|
 T fail
-y/+/ /
 p
 b
 : fail
