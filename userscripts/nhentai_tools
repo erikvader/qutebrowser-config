@@ -12,7 +12,7 @@ from contextlib import contextmanager
 class InvalidUrlException(Exception):
    pass
 
-HENTAIDIR = "/media/3TB/Anime/Manga/nhentai"
+HENTAIDIR = "/media/NAS/Anime/Manga/nhentai"
 TOREAD = "{}/Dropbox/org/toread.org".format(os.environ["HOME"])
 
 FIFO = ""
