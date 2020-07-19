@@ -133,6 +133,8 @@ def downloadPosts(urls):
       if error:
          removeFromCache(newones)
 
+      proc.wait()
+
       qute_print("Downloaded {} new files and {} files already existed ({} links)".format(succ, dups, len(newones)))
 
 def run_all():
