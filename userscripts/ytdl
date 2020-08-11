@@ -2,9 +2,23 @@
 
 set -e
 DLDIR="$HOME/Videos/yt"
+
+cookies=
+domain=.youtube.com
+if [[ "$QUTE_URL" = *"$domain"* ]]; then
+    tmp=$(mktemp --tmpdir 'ytdl.XXXXXX')
+    trap "rm -f '$tmp'" EXIT
+    if "$QUTE_CONFIG_DIR/userscripts/print_cookies" "$QUTE_DATA_DIR/webengine/Cookies" "$domain" > "$tmp"; then
+        cookies=$tmp
+        echo "message-info 'Passing cookies to youtube-dl'" >> "$QUTE_FIFO"
+    else
+        echo "message-warning 'Couldnt pass cookies, ignoring...'" >> "$QUTE_FIFO"
+    fi
+fi
+
 cd "$DLDIR"
 echo "message-info 'starting download of $QUTE_URL'" > "$QUTE_FIFO"
-if youtube-dl --merge-output-format mkv --write-thumbnail --no-playlist --max-downloads 1 "$QUTE_URL"; then
+if youtube-dl ${cookies:+ --cookies "$cookies"} --merge-output-format mkv --write-thumbnail --no-playlist --max-downloads 1 "$QUTE_URL"; then
     echo "message-info 'downloaded successfully to $DLDIR'" > "$QUTE_FIFO"
 else
     echo "message-error 'download failed'" > "$QUTE_FIFO"

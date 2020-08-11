@@ -87,7 +87,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>r':        'tab-close ;; undo',
    '<ctrl-2>':         'tab-close ;; undo',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
-   '<ctrl-x>i':        'inspector',
+   '<ctrl-x>i':        'devtools window',
    '<ctrl-x>v':        'enter-mode passthrough',
 
    # searching
@@ -199,6 +199,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>nd': 'spawn --userscript nhentai_tools --remove',
    '<ctrl-x>nu': 'spawn --userscript nhentai_tools --undo',
    '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add",
+
+   '<ctrl-4>': "spawn --userscript imgdownloader",
 
    '<ctrl-x>1': 'hint links userscript instacurrent',
    '<ctrl-x>2': 'hint --rapid links userscript instacurrent',

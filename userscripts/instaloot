@@ -7,6 +7,7 @@ import pickle as P
 import json
 import tempfile
 import subprocess as SP
+from quteprinter import qute_print, qute_wprint, qute_eprint
 
 runningFile = "/tmp/instaloot_running"
 dest = os.path.join(os.environ["HOME"], "Pictures/instagram")
@@ -59,19 +60,6 @@ def testSetCache(codes):
       P.dump(set(), f)
       f.seek(0)
    return safeWriteOpen(cacheFile, doFile, initFile, binary=True)
-
-def _qute_print(msg, cmd):
-   with open(os.environ["QUTE_FIFO"], "w") as f:
-      f.write("{} '{}'\n".format(cmd, msg.translate("".maketrans("", "", "\"'"))))
-
-def qute_print(msg):
-   _qute_print(msg, "message-info")
-
-def qute_eprint(msg):
-   _qute_print(msg, "message-error")
-
-def qute_wprint(msg):
-   _qute_print(msg, "message-warning")
 
 def get_cookies(f):
    exe = os.path.join(os.environ["QUTE_CONFIG_DIR"], "userscripts", "print_cookies")

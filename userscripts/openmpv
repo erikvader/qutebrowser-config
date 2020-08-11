@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 mpvargs=('--ytdl-format=bestvideo[height<=1080]+bestaudio/best[height<=1080]/bestvideo+bestaudio/best'
          '--msg-level=all=error'
          '--force-window=immediate')
