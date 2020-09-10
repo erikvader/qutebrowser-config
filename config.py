@@ -16,6 +16,7 @@ c.downloads.position = 'bottom'
 c.downloads.location.remember = False
 c.downloads.location.suggestion = "both"
 c.downloads.remove_finished = 5000
+c.downloads.location.prompt = False
 c.editor.command = ['emacsclient', '-c', '-e', '(find-file "{file}")', '-e', '(goto-line {line})', '-e', '(move-to-column {column0})']
 c.scrolling.bar = 'always'
 c.statusbar.widgets = ['keypress', 'url', 'history', 'tabs', 'progress']
