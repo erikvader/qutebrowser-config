@@ -4,9 +4,23 @@
 ############################### boring settings ###############################
 
 c.content.autoplay = True
-with config.pattern('*://*.youtube.com/*') as p:
-   p.content.autoplay = False
+autoplay_domains = ["youtube.com"]
+try:
+   with open("secret_autoplay_false", "r") as saf:
+      autoplay_domains += [l.strip() for l in saf if l.strip()]
+except FileNotFoundError:
+   pass
+for dom in autoplay_domains:
+   with config.pattern('*://*.'+dom+'/*') as p:
+      p.content.autoplay = False
 
+for dom in ["https://mail.google.com?extsrc=mailto&url=%25s", "https://calendar.google.com?cid=%25s"]:
+   with config.pattern(dom) as p:
+      p.content.register_protocol_handler = True
+
+c.content.geolocation = False
+c.content.media_capture = False
+c.content.notifications = False
 c.content.cookies.accept = 'all'
 c.content.host_blocking.whitelist = ['thepiratebay.org']
 c.content.javascript.can_access_clipboard = True
