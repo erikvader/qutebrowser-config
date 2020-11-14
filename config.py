@@ -19,7 +19,9 @@ for dom in ["https://mail.google.com?extsrc=mailto&url=%25s", "https://calendar.
       p.content.register_protocol_handler = True
 
 c.content.geolocation = False
-c.content.media_capture = False
+c.content.media.audio_video_capture = False
+c.content.media.audio_capture = False
+c.content.media.video_capture = False
 c.content.notifications = False
 c.content.cookies.accept = 'all'
 c.content.host_blocking.whitelist = ['thepiratebay.org']
