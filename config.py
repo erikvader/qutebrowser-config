@@ -6,7 +6,7 @@
 c.content.autoplay = True
 autoplay_domains = ["youtube.com"]
 try:
-   with open("secret_autoplay_false", "r") as saf:
+   with open(config.configdir / "secret_autoplay_false", "r") as saf:
       autoplay_domains += [l.strip() for l in saf if l.strip()]
 except FileNotFoundError:
    pass
@@ -40,14 +40,13 @@ c.tabs.background = True
 c.tabs.last_close = 'default-page'
 c.tabs.select_on_remove = 'last-used'
 c.tabs.new_position.stacking = False
-c.url.default_page = str(config.configdir / "startpage.html") # NOTE: recommended way to access?
+c.url.default_page = str(config.configdir / "startpage.html")
 c.url.start_pages = c.url.default_page
 
 c.url.searchengines = {
    'DEFAULT': 'https://duckduckgo.com/?q={}'
 }
-# NOTE: recommended way to access?
-with open(str(config.configdir / "engines"), "r") as f:
+with open(config.configdir / "engines", "r") as f:
    for line in f:
       line = line.strip()
       if line == "" or line.startswith("#"):
