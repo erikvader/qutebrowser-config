@@ -42,6 +42,8 @@ c.tabs.select_on_remove = 'last-used'
 c.tabs.new_position.stacking = False
 c.url.default_page = str(config.configdir / "startpage.html")
 c.url.start_pages = c.url.default_page
+c.messages.timeout = 6000
+c.colors.messages.error.bg = "#b22222"
 
 c.url.searchengines = {
    'DEFAULT': 'https://duckduckgo.com/?q={}'
@@ -98,7 +100,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>k':        'tab-close',
    '<ctrl-x>h':        'set-cmd-text -s :help',
    '<ctrl-x>d':        'download-clear',
-   '<ctrl-x>c':        'clear-messages',
+   '<alt-c>':          'clear-messages',
+   '<alt-m>':          'messages --tab',
    '<ctrl-x><ctrl-r>': 'config-source;; message-info "reloaded config"',
    '<ctrl-x>r':        'tab-close ;; undo',
    '<ctrl-2>':         'tab-close ;; undo',
@@ -216,16 +219,17 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>nu': 'spawn --userscript nhentai_tools --undo',
    '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add",
 
-   '<ctrl-4>': "spawn --userscript imgdownloader",
+   '<ctrl-5>': "spawn --userscript imgdownloader",
 
    '<ctrl-x>1': 'hint links userscript instacurrent',
    '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
    '<ctrl-x>3': 'spawn --userscript instacurrent',
    '<ctrl-x>4': 'spawn -u instaall',
 
-   # '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}'
-   '<ctrl-x>g': 'spawn --userscript to_google'
+   '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}',
 
+   '<ctrl-4>':       'spawn --userscript --output-messages rememberer',
+   '<ctrl-shift-$>': 'spawn --userscript --output-messages rememberer replay',
 }
 
 c.bindings.commands['normal']['<ctrl-m>'] = c.bindings.commands['normal']['<ctrl-x>M']
