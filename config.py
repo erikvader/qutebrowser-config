@@ -219,7 +219,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>nu': 'spawn --userscript nhentai_tools --undo',
    '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add",
 
-   '<ctrl-5>': "spawn --userscript imgdownloader",
+   '<ctrl-4>': "spawn --userscript imgdownloader",
 
    '<ctrl-x>1': 'hint links userscript instacurrent',
    '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
@@ -228,8 +228,8 @@ c.bindings.commands['normal'] = {
 
    '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}',
 
-   '<ctrl-4>':       'spawn --userscript --output-messages rememberer',
-   '<ctrl-shift-$>': 'spawn --userscript --output-messages rememberer replay',
+   '<alt-r>':       'spawn --userscript --output-messages rememberer',
+   '<alt-shift-r>': 'spawn --userscript --output-messages rememberer replay',
 }
 
 c.bindings.commands['normal']['<ctrl-m>'] = c.bindings.commands['normal']['<ctrl-x>M']
