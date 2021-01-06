@@ -163,6 +163,7 @@ c.bindings.commands['normal'] = {
    '<alt-p>':        'open -t -- {clipboard}',
    '<ctrl-y>':       'yank',
    '<alt-y>':        'spawn --userscript save_url',
+   '<alt-shift-y>':  'spawn --userscript save_url t',
 
    # macro
    # '<ctrl-x>q': 'record-macro',
@@ -228,8 +229,8 @@ c.bindings.commands['normal'] = {
 
    '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}',
 
-   '<alt-r>':       'spawn --userscript --output-messages rememberer',
-   '<alt-shift-r>': 'spawn --userscript --output-messages rememberer replay',
+   '<alt-shift-r>': 'spawn --userscript --output-messages rememberer',
+   '<alt-r>':       'spawn --userscript --output-messages rememberer replay',
 }
 
 c.bindings.commands['normal']['<ctrl-m>'] = c.bindings.commands['normal']['<ctrl-x>M']
