@@ -1,5 +1,4 @@
-# Uncomment this to still load settings configured via autoconfig.yml
-# config.load_autoconfig()
+config.load_autoconfig(False)
 
 ############################### boring settings ###############################
 
@@ -24,7 +23,7 @@ c.content.media.audio_capture = False
 c.content.media.video_capture = False
 c.content.notifications = False
 c.content.cookies.accept = 'no-3rdparty'
-c.content.host_blocking.whitelist = ['thepiratebay.org']
+c.content.blocking.whitelist = ['thepiratebay.org']
 c.content.javascript.can_access_clipboard = True
 c.content.notifications = False
 c.downloads.open_dispatcher = 'rifle'
@@ -107,7 +106,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-2>':         'tab-close ;; undo',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
    '<ctrl-x>i':        'devtools window',
-   '<ctrl-x>v':        'enter-mode passthrough',
+   '<ctrl-x>v':        'mode-enter passthrough',
 
    # searching
    '<ctrl-s>': 'set-cmd-text /',
@@ -248,20 +247,20 @@ c.bindings.commands['command'] = {
    '<alt-j>': 'command-history-next',
 
    # escape hatch
-   '<ctrl-g>': 'leave-mode',
-   '<Escape>': 'leave-mode'
+   '<ctrl-g>': 'mode-leave',
+   '<Escape>': 'mode-leave'
 }
 
 c.bindings.commands['hint'] = {
    # escape hatch
-   '<ctrl-g>': 'leave-mode',
-   '<Escape>': 'leave-mode'
+   '<ctrl-g>': 'mode-leave',
+   '<Escape>': 'mode-leave'
 }
 
 c.bindings.commands['caret'] = {
    # escape hatch
-   '<ctrl-g>': 'leave-mode',
-   '<Escape>': 'leave-mode'
+   '<ctrl-g>': 'mode-leave',
+   '<Escape>': 'mode-leave'
 }
 
 ############################# massa fake-bindings #############################
