@@ -18,6 +18,8 @@ ho https://www.haskell.org/hoogle/?hoogle={}
 rd https://doc.rust-lang.org/std/index.html?search={}
 drs https://docs.rs/releases/search?query={}
 
+cpp https://en.cppreference.com/mwiki/index.php?search={}
+
 # anime
 nyaa https://nyaa.si/?q={}
 mal https://myanimelist.net/search/all?q={}
