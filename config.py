@@ -230,6 +230,7 @@ c.bindings.commands['normal'] = {
 
    '<alt-shift-r>': 'spawn --userscript --output-messages rememberer',
    '<alt-r>':       'spawn --userscript --output-messages rememberer replay',
+   '<alt-control-r>': 'spawn --userscript --output-messages rememberer replayother',
 }
 
 c.bindings.commands['normal']['<ctrl-m>'] = c.bindings.commands['normal']['<ctrl-x>M']

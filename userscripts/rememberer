@@ -1,7 +1,9 @@
 #!/bin/sh
 
-if [ "$1" ]; then
+if [ "$1" = replay ]; then
     exec rememberer --replay
+elif [ "$1" = replayother ]; then
+    exec rememberer --replay-other
 else
     exec rememberer "$QUTE_URL" < "$QUTE_HTML"
 fi
