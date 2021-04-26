@@ -47,6 +47,11 @@ def musesExtractor(soup):
             links.append("/image/fm/{}?name={}{}".format(img, filename, ext))
     return links
 
+def hentaifoundryExtractor(soup):
+    if img := soup.select_one("div.boxbody > img"):
+        return [img.get("src")]
+    return []
+
 def name_from_url(url):
     up = urlparse(url)
     params = parse_qs(up.query)
@@ -75,6 +80,7 @@ def main():
         "g.chounyuu.com": chounyuuExtractor,
         "xfantazy.com": xfantazyExtractor,
         "comics.8muses.com": musesExtractor,
+        "www.hentai-foundry.com": hentaifoundryExtractor,
     }
 
     if "QUTE_HTML" not in os.environ:
@@ -98,7 +104,7 @@ def main():
         qute_wprint("didn't extract any images")
         return
 
-    qute_print("Downloading...")
+    # qute_print("Downloading...")
     for u in image_urls:
         full_url = make_url_absolute(host, u)
         filename = name_from_url(full_url)
@@ -108,7 +114,7 @@ def main():
         with urlopen(r) as uopen, open(path, "wb") as f:
             copyfileobj(uopen, f)
             qute_print("Downloaded " + filename + "!")
-    qute_print("Done!")
+    # qute_print("Done!")
 
 if __name__ == "__main__":
    main()
