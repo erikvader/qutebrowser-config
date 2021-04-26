@@ -21,11 +21,10 @@ c.content.geolocation = False
 c.content.media.audio_video_capture = False
 c.content.media.audio_capture = False
 c.content.media.video_capture = False
-c.content.notifications = False
+c.content.notifications.enabled = False
 c.content.cookies.accept = 'no-3rdparty'
 c.content.blocking.whitelist = ['thepiratebay.org']
 c.content.javascript.can_access_clipboard = True
-c.content.notifications = False
 c.downloads.open_dispatcher = 'rifle'
 c.downloads.position = 'bottom'
 c.downloads.location.remember = False
@@ -41,7 +40,6 @@ c.tabs.select_on_remove = 'last-used'
 c.tabs.new_position.stacking = False
 c.url.default_page = str(config.configdir / "startpage.html")
 c.url.start_pages = c.url.default_page
-c.messages.timeout = 6000
 c.colors.messages.error.bg = "#b22222"
 
 c.url.searchengines = {
@@ -72,6 +70,7 @@ c.hints.selectors["magnets"] = ["[href^=\"magnet:\"]"]
 # Bindings for normal mode
 
 # disable insert mode completely
+c.input.media_keys = False
 c.input.insert_mode.auto_enter = False
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.plugins = False
