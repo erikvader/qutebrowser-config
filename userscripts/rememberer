@@ -5,5 +5,8 @@ if [ "$1" = replay ]; then
 elif [ "$1" = replayother ]; then
     exec rememberer --replay-other
 else
-    exec rememberer "$QUTE_URL" < "$QUTE_HTML"
+    js=/tmp/rememberer_mark
+    rm -f "$js"
+    rememberer --mark "$js" "$QUTE_URL" < "$QUTE_HTML"
+    echo "jseval -q -f $js" > "$QUTE_FIFO"
 fi
