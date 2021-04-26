@@ -8,27 +8,30 @@ import random
 import sys
 from fcntl import flock, LOCK_EX
 from contextlib import contextmanager
+from enum import auto, Enum
+from quteprinter import started_from_qute, get_qute_page, send_to_qute, qute_print, qute_wprint, qute_jseval
+from beautifulsoupUtils import unique_selector
 
 class InvalidUrlException(Exception):
    pass
 
+class Status(Enum):
+   DOWNLOADED = auto()
+   TOREAD = auto()
+   UNKNOWN = auto
+
 HENTAIDIR = "/media/NAS/Anime/Manga/nhentai"
 TOREAD = "{}/Dropbox/org/toread.org".format(os.environ["HOME"])
 
-FIFO = ""
 QUTE_URL = ""
 
 # extremover = re.compile(r"^(.+)\.(jpg|png)$")
 idfinder = re.compile(r"^\[([0-9]+?)\].*$")                       # find id from filenames
 toreadfinder = re.compile(r"^https?://nhentai\.net/g/([0-9]+)/$") # find id from urls
-
-def send_to_qute(x):
-   with open(FIFO, "w") as p:
-      flock(p, LOCK_EX)
-      p.write("{}\n".format(x))
+shorttoreadfinder = re.compile(r"^/g/([0-9]+)/?$")                # find id in short url
 
 def message(msg):
-   send_to_qute("message-info '{}'".format(msg.translate("".maketrans("", "", "\"'"))))
+   qute_print(msg)
 
 def downloaded_files():
    with os.scandir(HENTAIDIR) as it:
@@ -70,6 +73,22 @@ def get_qute_id():
 
    return get_first_group(QUTE_URL, toreadfinder)
 
+def get_status(hids):
+   results = []
+   db_ids = get_downloaded_ids()
+   with with_toread() as ids:
+      for hid in hids:
+         if not hid.isdecimal():
+            raise Exception("{} is not decimal".format(hid))
+
+         if hid in db_ids:
+            results.append(Status.DOWNLOADED)
+         elif hid in ids:
+            results.append(Status.TOREAD)
+         else:
+            results.append(Status.UNKNOWN)
+   return results
+
 def toread_random():
    with with_toread() as ids:
       if not ids:
@@ -81,26 +100,18 @@ def toread_random():
       send_to_qute("open https://nhentai.net/g/{}/".format(r))
 
 def check_existance():
-   db_ids = get_downloaded_ids()
    try:
       hid = get_qute_id()
    except InvalidUrlException:
       return
-   with with_toread() as ids:
-      res = ""
 
-      if hid in db_ids:
-         res = "is downloaded"
-
-      if hid in ids:
-         if res:
-            res += " and "
-         res += "is planned to be read"
-
-      if res:
-         message(res)
-      else:
-         message("never seen before")
+   status = get_status([hid])[0]
+   if status == Status.DOWNLOADED:
+      message("is downloaded")
+   elif status == Status.TOREAD:
+      message("is planned to be read")
+   else:
+      message("never seen before")
 
 def add_toread():
    try:
@@ -180,13 +191,39 @@ def download():
 
    message("done with {}".format(hid))
 
+def mark_webpage():
+   webpage = get_qute_page()
+
+   covers = []
+   for caption in webpage.select("div.gallery > a.cover > div.caption"):
+      hent_url = caption.parent["href"]
+      if match := shorttoreadfinder.fullmatch(hent_url):
+         hid = match.group(1)
+      else:
+         continue
+      sel = unique_selector(caption)
+      if sel is None:
+         qute_wprint(f"selector for {hid} returned None")
+         continue
+      covers.append((hid, sel))
+
+   statuses = get_status(hid for hid, _ in covers)
+   for status, (_, sel) in zip(statuses, covers):
+      if status == Status.UNKNOWN:
+         continue
+      elif status == Status.DOWNLOADED:
+         color = "black"
+      else:
+         color = "yellow"
+      command = "document.querySelector(\"{}\").style.color = \"{}\"".format(sel, color)
+      qute_jseval(command)
+
 def main():
-   global FIFO, QUTE_URL
-   if "QUTE_FIFO" not in os.environ or "QUTE_URL" not in os.environ:
+   global QUTE_URL
+   if not started_from_qute():
       print("this must be run from withing qutebrowser", file=sys.stderr)
       exit(1)
 
-   FIFO = os.environ["QUTE_FIFO"]
    QUTE_URL = os.environ["QUTE_URL"]
 
    parser = argparse.ArgumentParser(description="some things to organize nhentai chapters")
@@ -198,6 +235,7 @@ def main():
    parser.add_argument("--download", action="store_true", help="download current chapter")
    parser.add_argument("--undo", action="store_true", help="remove latest addition to toread")
    parser.add_argument("--remove", action="store_true", help="remove current chapter from toread")
+   parser.add_argument("--mark", action="store_true", help="generate javascript to colorize current page")
 
    args = parser.parse_args()
    QUTE_URL = args.url
@@ -214,6 +252,8 @@ def main():
       undo()
    elif args.remove:
       remove_toread()
+   elif args.mark:
+      mark_webpage()
 
 if __name__ == "__main__":
    main()

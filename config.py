@@ -217,8 +217,9 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>nd': 'spawn --userscript nhentai_tools --remove',
    '<ctrl-x>nu': 'spawn --userscript nhentai_tools --undo',
    '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add",
+   '<ctrl-4>'  : "spawn --userscript nhentai_tools --mark",
 
-   '<ctrl-4>': "spawn --userscript imgdownloader",
+   '<ctrl-5>': "spawn --userscript imgdownloader",
 
    '<ctrl-x>1': 'hint links userscript instacurrent',
    '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
