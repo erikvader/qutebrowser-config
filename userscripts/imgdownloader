@@ -9,6 +9,9 @@ from quteprinter import qute_print, qute_wprint
 
 DOWNLOAD_DIR = os.environ["HOME"] + "/Downloads"
 
+def recceExtractor(soup):
+    return [a.get("href") for a in soup.find_all("a") if a.get("href") is not None and a.get("href").endswith("_b.jpg")]
+
 def gelbooruExtractor(soup):
     for a in soup.find_all("a"):
         if a.string == "Original image":
@@ -75,6 +78,7 @@ def make_url_absolute(host, url):
 
 def main():
     extractors = {
+        "recce.utn.se": recceExtractor,
         "gelbooru.com": gelbooruExtractor,
         "chan.sankakucomplex.com": sankakucomplexExtractor,
         "g.chounyuu.com": chounyuuExtractor,
@@ -110,7 +114,8 @@ def main():
         filename = name_from_url(full_url)
         path = os.path.join(DOWNLOAD_DIR, filename)
 
-        r = Request(full_url, headers={'User-Agent': 'Mozilla/5.0'})
+        print(full_url)
+        r = Request(full_url, headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.15.2 Chrome/87.0.4280.144 Safari/537.36'})
         with urlopen(r) as uopen, open(path, "wb") as f:
             copyfileobj(uopen, f)
             qute_print("Downloaded " + filename + "!")
