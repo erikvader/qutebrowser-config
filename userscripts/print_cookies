@@ -4,14 +4,12 @@ import sqlite3
 import sys
 from contextlib import closing
 import time
+from shutil import copy
+from tempfile import NamedTemporaryFile
+from quteprinter import qute_wprint
 
-def main():
-   if len(sys.argv) != 3:
-      exit(1)
-
-   cookiepath = sys.argv[1]
-   domain = sys.argv[2]
-   with closing(sqlite3.connect(cookiepath)) as conn:
+def print_cookies(cookiepath, domain):
+   with closing(sqlite3.connect(cookiepath, timeout=0.5)) as conn:
       curs = conn.execute('''
       SELECT host_key, is_persistent, path, is_secure, expires_utc, name, value
       FROM cookies
@@ -32,6 +30,25 @@ def main():
             row[0] = row[0][1:]
          row[1] = "TRUE" if row[1] == 1 else "FALSE"
          print('\t'.join(row))
+
+def main():
+   if len(sys.argv) != 3:
+      exit(1)
+
+   cookiepath = sys.argv[1]
+   domain = sys.argv[2]
+
+   try:
+      print_cookies(cookiepath, domain)
+   except sqlite3.OperationalError as e:
+      if str(e) != "database is locked":
+         exit(1)
+
+      # NOTE: ugly workaround for some qutebrowser bug
+      qute_wprint("Cookies is locked...")
+      with NamedTemporaryFile() as tf:
+         copy(cookiepath, tf.name)
+         print_cookies(tf.name, domain)
 
 if __name__ == "__main__":
    main()
