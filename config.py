@@ -203,7 +203,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>Y': 'hint links userscript ytdl',
    '<ctrl-x>y': 'spawn --userscript ytdl',
 
-   '<ctrl-x>M': 'hint links userscript openmpv',
+   '<ctrl-m>': 'hint links userscript openmpv',
+   '<ctrl-shift-m>': 'hint links userscript openmpv_lowres',
    '<ctrl-x>m': 'spawn --userscript openmpv',
 
    '<ctrl-x>t': 'hint magnets userscript torrentdownload',
@@ -232,8 +233,6 @@ c.bindings.commands['normal'] = {
    '<alt-r>':       'spawn --userscript --output-messages rememberer replay',
    '<alt-control-r>': 'spawn --userscript --output-messages rememberer replayother',
 }
-
-c.bindings.commands['normal']['<ctrl-m>'] = c.bindings.commands['normal']['<ctrl-x>M']
 
 c.bindings.commands['normal'].update({'<alt-{}>'.format(i): 'tab-focus {}'.format(i) for i in range(1,10)})
 
