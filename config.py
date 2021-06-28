@@ -230,8 +230,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}',
 
    '<alt-shift-r>': 'spawn --userscript --output-messages rememberer',
-   '<alt-r>':       'spawn --userscript --output-messages rememberer replay',
-   '<alt-control-r>': 'spawn --userscript --output-messages rememberer replayother',
+   '<alt-r>':       'spawn --userscript --output-messages rememberer nosave',
+   '<alt-control-r>': 'spawn --userscript --output-messages rememberer replay',
 }
 
 c.bindings.commands['normal'].update({'<alt-{}>'.format(i): 'tab-focus {}'.format(i) for i in range(1,10)})

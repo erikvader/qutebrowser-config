@@ -2,11 +2,12 @@
 
 if [ "$1" = replay ]; then
     exec rememberer --replay
-elif [ "$1" = replayother ]; then
-    exec rememberer --replay-other
 else
-    js=/tmp/rememberer_mark
-    rm -f "$js"
-    rememberer --mark "$js" "$QUTE_URL" < "$QUTE_HTML"
-    echo "jseval -q -f $js" > "$QUTE_FIFO"
+    jsfile=$HOME/.local/share/rememberer/.last_js
+    if [ "$1" = nosave ]; then
+        rememberer --quiet --everything --no-remember "$QUTE_URL" < "$QUTE_HTML"
+    else
+        rememberer "$QUTE_URL" < "$QUTE_HTML"
+    fi
+    echo "jseval -q -f $jsfile" > "$QUTE_FIFO"
 fi
