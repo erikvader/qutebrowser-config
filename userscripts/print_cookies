@@ -45,7 +45,7 @@ def main():
          exit(1)
 
       # NOTE: ugly workaround for some qutebrowser bug
-      qute_wprint("Cookies is locked...")
+      qute_wprint("the file Cookies is locked, commencing ugly workaround...")
       with NamedTemporaryFile() as tf:
          copy(cookiepath, tf.name)
          print_cookies(tf.name, domain)
