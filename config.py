@@ -232,6 +232,8 @@ c.bindings.commands['normal'] = {
    '<alt-shift-r>': 'spawn --userscript --output-messages rememberer',
    '<alt-r>':       'spawn --userscript --output-messages rememberer nosave',
    '<alt-control-r>': 'spawn --userscript --output-messages rememberer replay',
+
+   '-': 'jseval -q document.querySelector("button > div > svg[aria-label=Save]").parentElement.parentElement.click()',
 }
 
 c.bindings.commands['normal'].update({'<alt-{}>'.format(i): 'tab-focus {}'.format(i) for i in range(1,10)})
