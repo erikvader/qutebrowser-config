@@ -160,6 +160,12 @@ def download():
       return
 
    message("starting download of {}".format(hid))
+   # TODO: egn funktion?
+   # TODO: gallery-dl -o extractor.directory='["[{gallery_id}]{artist[:1]}[{title:.5}]"]' -o filename='{num:03}.{extension}' -d galley-dl
+   # TODO: ternary på artist
+   # TODO: hitta bra maxlängd
+   # TODO: en funktion som CBZ-fierar mappen
+   # TODO: triple-quotes är najs
    fp = P.run(["nhentai",
                "--id={}".format(hid),
                "--cbz",
