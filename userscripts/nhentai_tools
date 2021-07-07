@@ -218,17 +218,20 @@ def mark_webpage():
       command = "document.querySelector(\"{}\").style.color = \"{}\"".format(sel, color)
       qute_jseval(command)
 
+def fixup_toread():
+   db_ids = get_downloaded_ids()
+   with with_toread() as ids:
+      len_before = len(ids)
+      ids.difference_update(db_ids)
+      len_after = len(ids)
+   print("removed {} entries from toread".format(len_before - len_after))
+
 def main():
    global QUTE_URL
-   if not started_from_qute():
-      print("this must be run from withing qutebrowser", file=sys.stderr)
-      exit(1)
-
-   QUTE_URL = os.environ["QUTE_URL"]
 
    parser = argparse.ArgumentParser(description="some things to organize nhentai chapters")
 
-   parser.add_argument("url", nargs="?", default=QUTE_URL)
+   parser.add_argument("url", nargs="?")
    parser.add_argument("--add", action="store_true", help="add to toread")
    parser.add_argument("--exists", action="store_true", help="check if we have seen this thing before")
    parser.add_argument("--random", action="store_true", help="open a new chapter from toread")
@@ -236,9 +239,19 @@ def main():
    parser.add_argument("--undo", action="store_true", help="remove latest addition to toread")
    parser.add_argument("--remove", action="store_true", help="remove current chapter from toread")
    parser.add_argument("--mark", action="store_true", help="generate javascript to colorize current page")
+   parser.add_argument("--fixup-toread", action="store_true", help="remove downloaded entries from toread")
 
    args = parser.parse_args()
-   QUTE_URL = args.url
+
+   if args.fixup_toread:
+      fixup_toread()
+      exit(0)
+
+   if not started_from_qute():
+      print("this must be run from withing qutebrowser", file=sys.stderr)
+      exit(1)
+
+   QUTE_URL = args.url if args.url is not None else os.environ["QUTE_URL"]
 
    if args.add:
       add_toread()
