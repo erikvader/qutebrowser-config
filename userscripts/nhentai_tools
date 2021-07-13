@@ -18,7 +18,7 @@ class InvalidUrlException(Exception):
 class Status(Enum):
    DOWNLOADED = auto()
    TOREAD = auto()
-   UNKNOWN = auto
+   UNKNOWN = auto()
 
 HENTAIDIR = "/media/NAS/Anime/Manga/nhentai"
 TOREAD = "{}/Dropbox/org/toread.org".format(os.environ["HOME"])
@@ -29,6 +29,9 @@ QUTE_URL = ""
 idfinder = re.compile(r"^\[([0-9]+?)\].*$")                       # find id from filenames
 toreadfinder = re.compile(r"^https?://nhentai\.net/g/([0-9]+)/$") # find id from urls
 shorttoreadfinder = re.compile(r"^/g/([0-9]+)/?$")                # find id in short url
+
+def hid_to_url(hid):
+   return "https://nhentai.net/g/{}/".format(hid)
 
 def message(msg):
    qute_print(msg)
@@ -53,12 +56,12 @@ def with_toread(aslist=False):
          order_keys = {e: i for i,e in enumerate(org)}
          ids = sorted(ids, key=lambda x: order_keys.get(x, len(org)))
 
-      fmt = "https://nhentai.net/g/{}/\n"
       if ids != org:
          f.seek(0, 0) #goto beginning
          f.truncate()
          for i in ids:
-            f.write(fmt.format(i))
+            f.write(hid_to_url(i))
+            f.write("\n")
 
 def get_first_group(name, reg):
    return reg.sub(r"\1", name)
@@ -97,7 +100,7 @@ def toread_random():
 
       r = random.sample(ids, 1)[0]
       ids.remove(r)
-      send_to_qute("open https://nhentai.net/g/{}/".format(r))
+      send_to_qute("open {}".format(hid_to_url(r)))
 
 def check_existance():
    try:
@@ -149,23 +152,19 @@ def undo():
       hid = ids.pop()
       message("removed {}".format(hid))
 
-def download():
-   try:
-      hid = get_qute_id()
-   except InvalidUrlException:
-      return
+def turn_to_cbz(directory):
+   assert os.path.isdir(directory)
+   from zipfile import ZipFile
+   with ZipFile(directory + ".cbz", "w") as f:
+      pages = os.listdir(directory)
+      pages.sort()
+      for p in pages:
+         f.write(os.path.join(directory, p), p)
 
-   if hid in get_downloaded_ids():
-      message("{} is already downloaded".format(hid))
-      return
+   import shutil
+   shutil.rmtree(directory)
 
-   message("starting download of {}".format(hid))
-   # TODO: egn funktion?
-   # TODO: gallery-dl -o extractor.directory='["[{gallery_id}]{artist[:1]}[{title:.5}]"]' -o filename='{num:03}.{extension}' -d galley-dl
-   # TODO: ternary på artist
-   # TODO: hitta bra maxlängd
-   # TODO: en funktion som CBZ-fierar mappen
-   # TODO: triple-quotes är najs
+def download_nhentai(hid):
    fp = P.run(["nhentai",
                "--id={}".format(hid),
                "--cbz",
@@ -191,11 +190,60 @@ def download():
 
    fp.check_returncode()
 
+def download_gallery_dl(hid):
+   fp = P.run(["gallery-dl",
+               "-d", HENTAIDIR,
+               "-o", "filename={num:03}.{extension}",
+               "-o", 'directory=["[{gallery_id}][{title:.80}]"]',
+               hid_to_url(hid)
+               ],
+              stdout=P.PIPE,
+              stderr=P.PIPE,
+              text=True,
+              check=False)
+
+   if fp.stderr:
+      for l in fp.stderr.split("\n"):
+         message(l)
+      raise Exception("nhentai downloader wrote something to stderr")
+
+   files = 0
+   outfolder=None
+   for l in fp.stdout.rstrip().split("\n"):
+      line = l.removeprefix("# ")
+      if not line.startswith(HENTAIDIR):
+         raise Exception("unexpected line: '{}'".format(line))
+
+      files += 1
+      outfolder = os.path.dirname(line)
+
+   if files <= 0 or outfolder is None:
+      raise Exception("did not download anything")
+
+   fp.check_returncode()
+
+   turn_to_cbz(outfolder)
+   return files
+
+def download():
+   try:
+      hid = get_qute_id()
+   except InvalidUrlException:
+      return
+
+   if hid in get_downloaded_ids():
+      message("{} is already downloaded".format(hid))
+      return
+
+   message("starting download of {}".format(hid))
+   # download_nhentai(hid)
+   count = download_gallery_dl(hid)
+
    with with_toread() as ids:
       if hid in ids:
          ids.remove(hid)
 
-   message("done with {}".format(hid))
+   message("done with {}, downloaded {} pages".format(hid, count))
 
 def mark_webpage():
    webpage = get_qute_page()
