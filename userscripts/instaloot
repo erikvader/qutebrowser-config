@@ -111,7 +111,8 @@ def downloadPosts(urls):
             succ += 1
             qute_print("succ: {}".format(line.rstrip()))
          else:
-            raise Exception("unexpected line from stdout: '{}'".format(line))
+            error = True
+            qute_eprint("unexpected line from stdout: '{}'".format(line))
 
       for line in proc.stderr:
          if not re.match(r"^\[[0-9]+/[0-9]+\]", line):
