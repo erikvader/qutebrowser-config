@@ -23,4 +23,4 @@ if [[ "$QUTE_URL" = *"$domain"* ]]; then
     fi
 fi
 
-mpv "${mpvargs[@]}" "$QUTE_URL"
+mpv --script-opts=ytdl_hook-ytdl_path=yt-dlp "${mpvargs[@]}" "$QUTE_URL"
