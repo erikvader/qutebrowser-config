@@ -55,6 +55,11 @@ def hentaifoundryExtractor(soup):
         return [img.get("src")]
     return []
 
+def deviantartExtractor(soup):
+    if (img := soup.select_one("img._3X6pY")) or (img := soup.select_one("img._2mdk5")):
+        return [img.get("src")]
+    return []
+
 def name_from_url(url):
     up = urlparse(url)
     params = parse_qs(up.query)
@@ -85,6 +90,7 @@ def main():
         "xfantazy.com": xfantazyExtractor,
         "comics.8muses.com": musesExtractor,
         "www.hentai-foundry.com": hentaifoundryExtractor,
+        "www.deviantart.com": deviantartExtractor,
     }
 
     if "QUTE_HTML" not in os.environ:
