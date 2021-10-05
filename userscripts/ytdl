@@ -18,7 +18,7 @@ fi
 
 cd "$DLDIR"
 echo "message-info 'starting download of $QUTE_URL'" > "$QUTE_FIFO"
-if youtube-dl ${cookies:+ --cookies "$cookies"} --merge-output-format mkv --write-thumbnail --no-playlist --max-downloads 1 "$QUTE_URL"; then
+if youtube-dl ${cookies:+ --cookies "$cookies"} --merge-output-format mkv --write-thumbnail --no-playlist "$QUTE_URL"; then
     echo "message-info 'downloaded successfully to $DLDIR'" > "$QUTE_FIFO"
 else
     echo "message-error 'download failed'" > "$QUTE_FIFO"
