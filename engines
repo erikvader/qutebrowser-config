@@ -29,5 +29,6 @@ mal https://myanimelist.net/search/all?q={}
 
 # other
 gif https://giphy.com/search/{}
+180 https://www.180.se/nummer/{}
 
 DEFAULT go
