@@ -9,6 +9,23 @@ from quteprinter import qute_print, qute_wprint
 
 DOWNLOAD_DIR = os.environ["HOME"] + "/Downloads"
 
+def pixivExtractor(soup):
+    user_tag = soup.select_one("aside > section > h2 a[href] > div:not([class])")
+    user_name = None
+    if user_tag is not None:
+        user_name = user_tag.get_text(strip=True) or None
+
+    def get_url(div):
+        for x in div.select("a, img"):
+            if "/img-original/" in (url := x.get("href", "")) or "/img-original/" in (url := x.get("src", "")):
+                return (user_name, url) if user_name is not None else url
+
+    highlighted = soup.select_one("body > div[role=presentation]")
+    if highlighted is not None:
+        return [get_url(highlighted)]
+
+    return [get_url(x) for x in soup.select("div[role=presentation] div[role=presentation]")]
+
 def recceExtractor(soup):
     return [a.get("href") for a in soup.find_all("a") if a.get("href") is not None and a.get("href").endswith("_b.jpg")]
 
@@ -91,6 +108,12 @@ def main():
         "comics.8muses.com": musesExtractor,
         "www.hentai-foundry.com": hentaifoundryExtractor,
         "www.deviantart.com": deviantartExtractor,
+        "www.pixiv.net": pixivExtractor,
+    }
+
+    std_header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.15.2 Chrome/87.0.4280.144 Safari/537.36'}
+    special_headers = {
+        "www.pixiv.net": {"referer": "https://www.pixiv.net/"}
     }
 
     if "QUTE_HTML" not in os.environ:
@@ -116,12 +139,18 @@ def main():
 
     # qute_print("Downloading...")
     for u in image_urls:
+        name_extra = None
+        if isinstance(u, tuple):
+            name_extra, u = u
+
         full_url = make_url_absolute(host, u)
         filename = name_from_url(full_url)
+        if name_extra:
+            filename = name_extra.replace('/', '-') + "_" + filename
         path = os.path.join(DOWNLOAD_DIR, filename)
 
-        print(full_url)
-        r = Request(full_url, headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.15.2 Chrome/87.0.4280.144 Safari/537.36'})
+        s_header = special_headers.get(host, {})
+        r = Request(full_url, headers={**s_header, **std_header})
         with urlopen(r) as uopen, open(path, "wb") as f:
             copyfileobj(uopen, f)
             qute_print("Downloaded " + filename + "!")
