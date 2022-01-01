@@ -1,4 +1,4 @@
-#!/usr/bin/env -S sbcl --core ${HOME}/quicklisp/script.core --script
+#!/usr/bin/env sbcl-script
 
 (defparameter *host-regex* (ppcre:create-scanner "^https?://(.+?)(/|$)"))
 (defparameter *qurl* (sb-ext:posix-getenv "QUTE_URL"))
@@ -25,7 +25,3 @@
     (with-open-file (fifo *qfifo* :direction :output
                                   :if-does-not-exist :error)
       (format fifo "~a~%" cmd))))
-
-;; Local Variables:
-;; mode: lisp
-;; End:
