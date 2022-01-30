@@ -127,7 +127,7 @@ c.bindings.commands['normal'] = {
    # hinting
    '<ctrl-f>': 'hint all',
    '<alt-f>':  'hint all tab-bg',
-   '<alt-a>': 'hint all download',
+   # '<alt-a>': 'hint all download',
 
    # history
    '<ctrl-l>': 'forward',
@@ -233,7 +233,12 @@ c.bindings.commands['normal'] = {
    '<alt-r>':       'spawn --userscript --output-messages rememberer nosave',
    '<alt-control-r>': 'spawn --userscript --output-messages rememberer replay',
 
-   '<ctrl-x>-': 'jseval -q document.querySelector("button > div > svg[aria-label=Save]").parentElement.parentElement.click()',
+   # insta
+   '<alt-w>': 'jseval -q document.querySelector("button > div > svg[aria-label=Save]").parentElement.parentElement.click()',
+   '<alt-e>': 'jseval -q document.querySelector("button > div.coreSpriteRightChevron").parentElement.click()',
+   '<alt-q>': 'jseval -q document.querySelector("button > div.coreSpriteLeftChevron").parentElement.click()',
+   '<alt-d>': 'fake-key <right>',
+   '<alt-a>': 'fake-key <left>',
 }
 
 c.bindings.commands['normal'].update({'<alt-{}>'.format(i): 'tab-focus {}'.format(i) for i in range(1,10)})
