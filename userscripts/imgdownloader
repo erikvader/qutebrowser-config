@@ -15,14 +15,21 @@ def pixivExtractor(soup):
     if user_tag is not None:
         user_name = user_tag.get_text(strip=True) or None
 
+    def with_name(url):
+        return (user_name, url) if user_name is not None else url
+
     def get_url(div):
         for x in div.select("a, img"):
             if "/img-original/" in (url := x.get("href", "")) or "/img-original/" in (url := x.get("src", "")):
-                return (user_name, url) if user_name is not None else url
+                return with_name(url)
+        return None
 
     highlighted = soup.select_one("body > div[role=presentation]")
     if highlighted is not None:
         return [get_url(highlighted)]
+
+    if soup.select("#manga-viewer-close-anchor"):
+        return [with_name(x["href"]) for x in soup.select("a[data-page]")]
 
     return [get_url(x) for x in soup.select("div[role=presentation] div[role=presentation]")]
 
