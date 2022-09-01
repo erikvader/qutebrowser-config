@@ -202,6 +202,7 @@ c.bindings.commands['normal'] = {
    # userscripts
    '<ctrl-x>Y': 'hint links userscript ytdl',
    '<ctrl-x>y': 'spawn --userscript ytdl',
+   '<ctrl-x><ctrl-y>': 'spawn --userscript ytdl-ph',
 
    '<ctrl-m>': 'hint links userscript openmpv',
    '<ctrl-shift-m>': 'hint links userscript openmpv_lowres',

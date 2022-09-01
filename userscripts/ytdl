@@ -1,7 +1,9 @@
 #!/bin/bash
 
 set -e
-DLDIR="$HOME/Videos/yt"
+
+[[ -z $DLDIR ]] && DLDIR=$HOME/Videos/yt
+declare -p YTDLFLAGS &>/dev/null || YTDLFLAGS=(--merge-output-format mkv --write-thumbnail --no-playlist)
 
 cookies=
 domain=.youtube.com
@@ -25,7 +27,7 @@ fi
 
 cd "$DLDIR"
 echo "message-info 'starting download of $QUTE_URL'" > "$QUTE_FIFO"
-if $yt_prog ${cookies:+ --cookies "$cookies"} --merge-output-format mkv --write-thumbnail --no-playlist "$QUTE_URL"; then
+if $yt_prog ${cookies:+ --cookies "$cookies"} "${YTDLFLAGS[@]}" "$QUTE_URL"; then
     echo "message-info 'downloaded successfully to $DLDIR'" > "$QUTE_FIFO"
 else
     echo "message-error 'download failed'" > "$QUTE_FIFO"
