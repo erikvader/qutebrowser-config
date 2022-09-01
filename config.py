@@ -236,8 +236,8 @@ c.bindings.commands['normal'] = {
 
    # insta
    '<alt-w>': 'jseval -q document.querySelector("button > div > svg[aria-label=Save]").parentElement.parentElement.click()',
-   '<alt-e>': 'jseval -q document.querySelector("button > div.coreSpriteRightChevron").parentElement.click()',
-   '<alt-q>': 'jseval -q document.querySelector("button > div.coreSpriteLeftChevron").parentElement.click()',
+   '<alt-e>': 'jseval -q document.querySelector("button[aria-label=Next]").click()',
+   '<alt-q>': 'jseval -q document.querySelector("button[aria-label=\'Go Back\']").click()',
    '<alt-d>': 'fake-key <right>',
    '<alt-a>': 'fake-key <left>',
 }

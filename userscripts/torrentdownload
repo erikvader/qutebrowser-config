@@ -31,7 +31,14 @@ elif [[ -n $path ]]; then
 
     if pgrep -x deluged &>/dev/null; then
         echo message-info "'Starting deluge-console...'" > "$QUTE_FIFO"
-        deluge-console "add -p \"$path\" \"$QUTE_URL\""
+        if ! console_out=$(deluge-console "add -p \"$path\" \"$QUTE_URL\""); then
+            if grep -xqF 'Torrent added!' <<< "$console_out"; then
+                echo message-warning "'deluge-console failed but seems to have worked anyway'" > "$QUTE_FIFO"
+            else
+                echo message-error "'deluge-console failed, aborting...'" > "$QUTE_FIFO"
+                exit 1
+            fi
+        fi
         echo message-info "'...added'" > "$QUTE_FIFO"
         echo "latest:$path" > "$LATESTFILE"
     else
