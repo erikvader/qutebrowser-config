@@ -210,7 +210,8 @@ c.bindings.commands['normal'] = {
 
    '<ctrl-x>t': 'hint magnets userscript torrentdownload',
 
-   '<ctrl-x>a': 'spawn --userscript random_anime',
+   '<ctrl-x>ar': 'spawn --userscript random_anime',
+   '<ctrl-x>as': 'jseval --quiet --file mal-sort-ptw-season.js',
 
    '<ctrl-x>nn': 'spawn --userscript nhentai_tools --download',
    '<ctrl-x>ne': 'spawn --userscript nhentai_tools --exists',
