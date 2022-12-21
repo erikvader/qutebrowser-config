@@ -221,6 +221,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>nu': 'spawn --userscript nhentai_tools --undo',
    '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add",
    '<ctrl-4>'  : "spawn --userscript nhentai_tools --mark",
+   '<ctrl-x>rs': 'jseval --quiet --file rarbg-sort-file.js',
+   '<ctrl-x>rf': 'jseval --quiet --file rarbg-filter-file.js',
 
    '<ctrl-5>': "spawn --userscript imgdownloader",
 
