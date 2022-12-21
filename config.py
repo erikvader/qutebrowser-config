@@ -214,14 +214,6 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>ar': 'spawn --userscript random_anime',
    '<ctrl-x>as': 'jseval --quiet --file mal-sort-ptw-season.js',
 
-   '<ctrl-x>nn': 'spawn --userscript nhentai_tools --download',
-   '<ctrl-x>ne': 'spawn --userscript nhentai_tools --exists',
-   '<ctrl-x>na': 'spawn --userscript nhentai_tools --add',
-   '<ctrl-x>nr': 'spawn --userscript nhentai_tools --random',
-   '<ctrl-x>nd': 'spawn --userscript nhentai_tools --remove',
-   '<ctrl-x>nu': 'spawn --userscript nhentai_tools --undo',
-   '<ctrl-1>'  : "spawn --userscript nhentai_tools '{url}' --add",
-   '<ctrl-4>'  : "spawn --userscript nhentai_tools --mark",
    '<ctrl-x>rs': 'jseval --quiet --file rarbg-sort-file.js',
    '<ctrl-x>rf': 'jseval --quiet --file rarbg-filter-file.js',
 
