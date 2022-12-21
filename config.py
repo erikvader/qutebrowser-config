@@ -159,8 +159,10 @@ c.bindings.commands['normal'] = {
    '<ctrl-shift-p>': 'open -t -- {clipboard}',
    '<alt-p>':        'open -t -- {clipboard}',
    '<ctrl-y>':       'yank',
-   '<alt-y>':        'spawn --userscript --output-messages save_url',
-   '<alt-shift-y>':  'spawn --userscript --output-messages save_url t',
+   '<alt-y>':        'spawn --userscript --output-messages save_url --rememberer',
+   '<alt-shift-y>':  'spawn --userscript --output-messages save_url',
+   '<alt-u>':        'spawn --userscript --output-messages save_url --rememberer 2',
+   '<alt-shift-u>':  'spawn --userscript --output-messages save_url 2',
 
    # macro
    # '<ctrl-x>q': 'record-macro',
