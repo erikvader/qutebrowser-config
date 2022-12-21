@@ -101,7 +101,6 @@ c.bindings.commands['normal'] = {
    '<alt-c>':          'clear-messages',
    '<alt-m>':          'messages --tab',
    '<ctrl-x><ctrl-r>': 'config-source;; message-info "reloaded config"',
-   '<ctrl-x>r':        'tab-close ;; undo',
    '<ctrl-2>':         'tab-close ;; undo',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
    '<ctrl-x>i':        'devtools window',
