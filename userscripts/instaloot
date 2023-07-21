@@ -76,55 +76,55 @@ def downloadPosts(urls):
 
    dups = 0
    succ = 0
-   error = False
 
-   with tempfile.NamedTemporaryFile(mode="w+") as input_file,\
-        tempfile.NamedTemporaryFile(mode="w+") as conf_file,\
+   with tempfile.NamedTemporaryFile(mode="w+") as conf_file,\
         tempfile.NamedTemporaryFile(mode="w+") as cookie_file:
       json.dump(gallery_dl_conf_data, conf_file)
       conf_file.flush()
 
-      for url in newones:
-         input_file.write(url)
-         input_file.write('\n')
-      input_file.flush()
-
       get_cookies(cookie_file)
       cookie_file.flush()
 
-      proc = SP.Popen(
-         [
-            "gallery-dl",
-            "--cookies", cookie_file.name,
-            "--input-file", input_file.name,
-            "--config", conf_file.name
-         ],
-         stdout=SP.PIPE,
-         stderr=SP.PIPE,
-         text=True)
+      failed_urls = []
+      for url in newones:
+         error = False
+         proc = SP.Popen(
+            [
+               "gallery-dl",
+               "--cookies", cookie_file.name,
+               "--config", conf_file.name,
+               url
+            ],
+            stdout=SP.PIPE,
+            stderr=SP.PIPE,
+            text=True)
 
-      for line in proc.stdout:
-         if line.startswith("# "):
-            dups += 1
-            qute_print(" dup: {}".format(line.rstrip()[2:]))
-         elif line.startswith(dest):
-            succ += 1
-            qute_print("succ: {}".format(line.rstrip()))
-         else:
-            error = True
-            qute_eprint("unexpected line from stdout: '{}'".format(line))
+         for line in proc.stdout:
+            if line.startswith("# "):
+               dups += 1
+               qute_print(" dup: {}".format(line.rstrip()[2:]))
+            elif line.startswith(dest):
+               succ += 1
+               qute_print("succ: {}".format(line.rstrip()))
+            else:
+               error = True
+               qute_eprint("unexpected line from stdout: '{}'".format(line))
 
-      for line in proc.stderr:
-         if not re.match(r"^\[[0-9]+/[0-9]+\]", line) and line.rstrip() != "[instagram][warning] Cookie 'sessionid' will expire in less than 1 hour":
-            error = True
-            qute_eprint(line.rstrip())
+         for line in proc.stderr:
+            if not re.match(r"^\[[0-9]+/[0-9]+\]", line) and line.rstrip() != "[instagram][warning] Cookie 'sessionid' will expire in less than 1 hour":
+               error = True
+               qute_eprint(line.rstrip())
 
-      if error:
-         removeFromCache(newones)
+         if error:
+            failed_urls.append(url)
+            qute_eprint("failed to download: {}".format(url))
 
-      proc.wait()
+         proc.wait()
 
-      qute_print("Downloaded {} new files and {} files already existed ({} links)".format(succ, dups, len(newones)))
+      if failed_urls:
+         removeFromCache(failed_urls)
+
+      qute_print("Downloaded {} new files, {} files already existed ({} links) and {} links failed".format(succ, dups, len(newones), len(failed_urls)))
 
 def run_all():
    try:
