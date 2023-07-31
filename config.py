@@ -83,16 +83,18 @@ ESC_BIND = 'clear-keychain ;; search ;; fullscreen --leave'
 c.bindings.default['normal'] = {}
 c.bindings.commands['normal'] = {
    # Navigation
-   '<ctrl-j>':      'scroll-px 0 40',
-   '<ctrl-k>':      'scroll-px 0 -40',
-   '<ctrl-d>':      'scroll-page 0 0.5',
-   '<ctrl-u>':      'scroll-page 0 -0.5',
-   '<alt-g>':       'scroll-to-perc 0',
-   '<alt-shift-g>': 'scroll-to-perc',
+   '<ctrl-j>':       'scroll-px 0 40',
+   '<ctrl-k>':       'scroll-px 0 -40',
+   '<ctrl-d>':       'scroll-page 0 0.5',
+   '<ctrl-u>':       'scroll-page 0 -0.5',
+   '<ctrl-g>':       'scroll-to-perc 0',
+   '<ctrl-shift-g>': 'scroll-to-perc',
+   '<alt-g>':        'scroll-to-perc',
 
    # Commands
    '<ctrl-r>':       'reload',
    '<ctrl-shift-r>': 'reload -f',
+   '<alt-r>':        'reload -f',
 
    '<alt-x>':          'set-cmd-text :',
    '<ctrl-x>k':        'tab-close',
@@ -101,48 +103,44 @@ c.bindings.commands['normal'] = {
    '<alt-c>':          'clear-messages',
    '<alt-m>':          'messages --tab',
    '<ctrl-x><ctrl-r>': 'config-source;; message-info "reloaded config"',
-   '<ctrl-2>':         'tab-close ;; undo',
+   '<ctrl-x>r':        'tab-close ;; undo',
    '<ctrl-x><ctrl-x>': 'fake-key <ctrl-x>',
    '<ctrl-x>i':        'devtools window',
    '<ctrl-x>v':        'mode-enter passthrough',
 
    # searching
    '<ctrl-s>': 'set-cmd-text /',
-   # '<ctrl-r>': 'set-cmd-text ?',
 
    # bookmarks
    '<ctrl-x><ctrl-b>': 'spawn --userscript bookmark_list',
-   '<ctrl-x>b': 'bookmark-add',
+   '<ctrl-x>b':        'bookmark-add',
 
    # zoom
    '<ctrl-+>': 'zoom-in',
    '<ctrl-->': 'zoom-out',
    '<ctrl-0>': 'zoom 100',
 
-   # marks
-   # '<ctrl-m>':  'enter-mode set_mark',
-   # '<ctrl-\'>': 'enter-mode jump_mark',
-
    # hinting
    '<ctrl-f>': 'hint all',
-   '<alt-f>':  'hint all tab-bg',
-   # '<alt-a>': 'hint all download',
 
    # history
    '<ctrl-l>': 'forward',
    '<ctrl-h>': 'back',
 
    # tabs
-   '<alt-j>':   'tab-next',
-   '<ctrl-3>':  'tab-next',
-   '<alt-k>':   'tab-prev',
-   '<ctrl-w>':  'tab-close',
-   '<ctrl-e>':  'tab-close --next',
-   '<ctrl-t>':  'open -t',
-   '<ctrl-x>u': 'undo',
+   '<alt-j>':        'tab-next',
+   '<alt-k>':        'tab-prev',
+   '<ctrl-w>':       'tab-close',
+   '<ctrl-e>':       'tab-close --next',
+   '<alt-e>':        'tab-next',
+   '<ctrl-t>':       'open -t',
+   '<ctrl-shift-t>': 'undo',
+   '<ctrl-x>u':      'undo',
+   '<alt-t>':        'undo',
 
    # windows
    '<ctrl-shift-n>': 'open -p',
+   '<alt-n>':        'open -p',
 
    # open links
    '<ctrl-o>':       'set-cmd-text -s :open',
@@ -150,38 +148,19 @@ c.bindings.commands['normal'] = {
    '<alt-o>':        'set-cmd-text -s :open -t',
    '<ctrl-x>o':      'set-cmd-text :open {url:pretty}',
 
-   '<ctrl-b>':       'set-cmd-text -s :quickmark-load',
-   '<ctrl-shift-b>': 'set-cmd-text -s :quickmark-load -t',
-   '<alt-b>':        'set-cmd-text -s :quickmark-load -t',
-
    # clipboard
    '<ctrl-p>':       'open -- {clipboard}',
    '<ctrl-shift-p>': 'open -t -- {clipboard}',
    '<alt-p>':        'open -t -- {clipboard}',
    '<ctrl-y>':       'yank',
-   '<alt-y>':        'spawn --userscript --output-messages save_url --rememberer',
-   '<alt-shift-y>':  'spawn --userscript --output-messages save_url',
-   '<alt-u>':        'spawn --userscript --output-messages save_url --rememberer 2',
-   '<alt-shift-u>':  'spawn --userscript --output-messages save_url 2',
 
-   # macro
-   # '<ctrl-x>q': 'record-macro',
-   # '<ctrl-x>@': 'run-macro',
-
-   # editing
-   # '<ctrl-f>': 'fake-key <Right>',
-   # '<ctrl-b>': 'fake-key <Left>',
-   # '<ctrl-a>': 'fake-key <Home>',
-   # '<ctrl-e>': 'fake-key <End>',
-   # '<ctrl-n>': 'fake-key <Down>',
-   # '<ctrl-p>': 'fake-key <Up>',
-   # '<alt-f>': 'fake-key <Ctrl-Right>',
-   # '<alt-b>': 'fake-key <Ctrl-Left>',
-   # '<ctrl-d>': 'fake-key <Delete>',
-   # '<alt-d>': 'fake-key <Ctrl-Delete>',
-   # '<alt-backspace>': 'fake-key <Ctrl-Backspace>',
-   # '<ctrl-w>': 'fake-key <Ctrl-backspace>',
-   # '<ctrl-y>': 'insert-text {primary}',
+   # rememberer
+   '<ctrl-b>s': 'spawn --userscript --output-messages save_url --rememberer',
+   '<ctrl-b>S': 'spawn --userscript --output-messages save_url',
+   '<ctrl-b>d': 'spawn --userscript --output-messages save_url --rememberer 2',
+   '<ctrl-b>D': 'spawn --userscript --output-messages save_url 2',
+   '<ctrl-b>r': 'spawn --userscript --output-messages rememberer',
+   '<ctrl-b>b': 'spawn --userscript --output-messages rememberer nosave',
 
    # Numbers
    # https://github.com/qutebrowser/qutebrowser/issues/4213
@@ -197,40 +176,36 @@ c.bindings.commands['normal'] = {
    '0': 'fake-key 0',
 
    # escape hatch
-   '<ctrl-g>': ESC_BIND,
    '<Escape>': ESC_BIND,
 
-   # userscripts
+   # ytdl
    '<ctrl-x>Y': 'hint links userscript ytdl',
    '<ctrl-x>y': 'spawn --userscript ytdl',
    '<ctrl-x><ctrl-y>': 'spawn --userscript ytdl-ph',
 
+   # mpv
    '<ctrl-m>': 'hint links userscript openmpv',
    '<ctrl-shift-m>': 'hint links userscript openmpv_lowres',
    '<ctrl-x>m': 'spawn --userscript openmpv',
 
+   # torrent
    '<ctrl-x>t': 'hint magnets userscript torrentdownload',
 
+   # anime
    '<ctrl-x>ar': 'spawn --userscript random_anime',
    '<ctrl-x>as': 'jseval --quiet --file mal-sort-ptw-season.js',
 
-   '<ctrl-x>rs': 'jseval --quiet --file rarbg-sort-file.js',
-   '<ctrl-x>rf': 'jseval --quiet --file rarbg-filter-file.js',
+   # images/instagram
+   '<ctrl-x>pp': "spawn --userscript imgdownloader",
+   '<ctrl-x>ph': 'hint links userscript instacurrent',
+   '<ctrl-x>pr': 'hint --rapid links userscript instacurrent',
+   '<ctrl-x>pc': 'spawn --userscript instacurrent',
+   '<ctrl-x>pa': 'spawn -u instaall',
 
-   '<ctrl-5>': "spawn --userscript imgdownloader",
-
-   '<ctrl-x>1': 'hint links userscript instacurrent',
-   '<ctrl-x>2': 'hint --rapid links userscript instacurrent',
-   '<ctrl-x>3': 'spawn --userscript instacurrent',
-   '<ctrl-x>4': 'spawn -u instaall',
-
+   # google image search
    '<ctrl-x>g': 'open -t https://images.google.com/searchbyimage?image_url={clipboard}',
 
-   '<alt-shift-r>': 'spawn --userscript --output-messages rememberer',
-   '<alt-r>':       'spawn --userscript --output-messages rememberer nosave',
-   '<alt-control-r>': 'spawn --userscript --output-messages rememberer replay',
-
-   # insta
+   # instagram navigation
    '<alt-w>': 'jseval -q document.querySelector("div[role=button] > div > div > svg[aria-label=Save]").parentElement.parentElement.click()',
    '<alt-e>': 'jseval -q document.querySelector("button[aria-label=Next]").click()',
    '<alt-q>': 'jseval -q document.querySelector("button[aria-label=\'Go Back\']").click()',
@@ -251,19 +226,16 @@ c.bindings.commands['command'] = {
    '<alt-j>': 'command-history-next',
 
    # escape hatch
-   '<ctrl-g>': 'mode-leave',
    '<Escape>': 'mode-leave'
 }
 
 c.bindings.commands['hint'] = {
    # escape hatch
-   '<ctrl-g>': 'mode-leave',
    '<Escape>': 'mode-leave'
 }
 
 c.bindings.commands['caret'] = {
    # escape hatch
-   '<ctrl-g>': 'mode-leave',
    '<Escape>': 'mode-leave'
 }
 
