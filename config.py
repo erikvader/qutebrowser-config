@@ -24,7 +24,7 @@ c.content.media.video_capture = False
 c.content.notifications.enabled = False
 c.content.cookies.accept = 'no-3rdparty'
 c.content.blocking.whitelist = ['thepiratebay.org']
-c.content.javascript.can_access_clipboard = True
+c.content.javascript.clipboard = 'access'
 c.downloads.open_dispatcher = 'rifle'
 c.downloads.position = 'bottom'
 c.downloads.location.remember = False
@@ -96,9 +96,9 @@ c.bindings.commands['normal'] = {
    '<ctrl-shift-r>': 'reload -f',
    '<alt-r>':        'reload -f',
 
-   '<alt-x>':          'set-cmd-text :',
+   '<alt-x>':          'cmd-set-text :',
    '<ctrl-x>k':        'tab-close',
-   '<ctrl-x>h':        'set-cmd-text -s :help',
+   '<ctrl-x>h':        'cmd-set-text -s :help',
    '<ctrl-x>d':        'download-clear',
    '<alt-c>':          'clear-messages',
    '<alt-m>':          'messages --tab',
@@ -109,7 +109,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-x>v':        'mode-enter passthrough',
 
    # searching
-   '<ctrl-s>': 'set-cmd-text /',
+   '<ctrl-s>': 'cmd-set-text /',
 
    # bookmarks
    '<ctrl-x><ctrl-b>': 'spawn --userscript bookmark_list',
@@ -133,6 +133,7 @@ c.bindings.commands['normal'] = {
    '<ctrl-w>':       'tab-close',
    '<ctrl-e>':       'tab-close --next',
    '<alt-e>':        'tab-next',
+   '<ctrl-shift-e>': 'tab-next',
    '<ctrl-t>':       'open -t',
    '<ctrl-shift-t>': 'undo',
    '<ctrl-x>u':      'undo',
@@ -143,10 +144,10 @@ c.bindings.commands['normal'] = {
    '<alt-n>':        'open -p',
 
    # open links
-   '<ctrl-o>':       'set-cmd-text -s :open',
-   '<ctrl-shift-o>': 'set-cmd-text -s :open -t',
-   '<alt-o>':        'set-cmd-text -s :open -t',
-   '<ctrl-x>o':      'set-cmd-text :open {url:pretty}',
+   '<ctrl-o>':       'cmd-set-text -s :open',
+   '<ctrl-shift-o>': 'cmd-set-text -s :open -t',
+   '<alt-o>':        'cmd-set-text -s :open -t',
+   '<ctrl-x>o':      'cmd-set-text :open {url:pretty}',
 
    # clipboard
    '<ctrl-p>':       'open -- {clipboard}',
@@ -161,6 +162,8 @@ c.bindings.commands['normal'] = {
    '<ctrl-b>D': 'spawn --userscript --output-messages save_url 2',
    '<ctrl-b>r': 'spawn --userscript --output-messages rememberer',
    '<ctrl-b>b': 'spawn --userscript --output-messages rememberer nosave',
+   '<ctrl-b><ctrl-b>': 'spawn --userscript --output-messages rememberer nosave',
+   '<ctrl-b>c': 'clear-messages',
 
    # Numbers
    # https://github.com/qutebrowser/qutebrowser/issues/4213

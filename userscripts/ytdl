@@ -3,7 +3,7 @@
 set -e
 
 [[ -z $DLDIR ]] && DLDIR=$HOME/Videos/yt
-declare -p YTDLFLAGS &>/dev/null || YTDLFLAGS=(--merge-output-format mkv --write-thumbnail --no-playlist)
+declare -p YTDLFLAGS &>/dev/null || YTDLFLAGS=(--write-thumbnail --no-playlist)
 
 cookies=
 domain=.youtube.com
