@@ -165,14 +165,13 @@ c.bindings.commands['normal'] = {
    '<ctrl-y>':       'yank',
 
    # rememberer
-   '<ctrl-b>s': 'spawn --userscript --output-messages save_url --rememberer',
-   '<ctrl-b>S': 'spawn --userscript --output-messages save_url',
-   '<ctrl-b>d': 'spawn --userscript --output-messages save_url --rememberer 2',
-   '<ctrl-b>D': 'spawn --userscript --output-messages save_url 2',
-   '<ctrl-b>r': 'spawn --userscript --output-messages rememberer',
-   '<ctrl-b>b': 'spawn --userscript --output-messages rememberer nosave',
+   '<ctrl-b><ctrl-s>': 'spawn --userscript --output-messages save_url --rememberer',
+   '<ctrl-b>s': 'spawn --userscript --output-messages save_url',
+   '<ctrl-b><ctrl-d>': 'spawn --userscript --output-messages save_url --rememberer 2',
+   '<ctrl-b>d': 'spawn --userscript --output-messages save_url 2',
+   '<ctrl-b><ctrl-r>': 'spawn --userscript --output-messages rememberer',
    '<ctrl-b><ctrl-b>': 'spawn --userscript --output-messages rememberer nosave',
-   '<ctrl-b>c': 'clear-messages',
+   '<ctrl-b><ctrl-c>': 'clear-messages',
 
    # Numbers
    # https://github.com/qutebrowser/qutebrowser/issues/4213
