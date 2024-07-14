@@ -1,4 +1,13 @@
+################################## autoconfig #################################
 config.load_autoconfig(False)
+
+############################## language settings ##############################
+
+# My LANG is globally set to en_US.UTF-8 to avoid things like git being in swedish.
+# Qutebrowser needs to be in swedish though to make input fields use the correct date
+# formats, i.e., no AM and PM.
+import os
+os.environ["LANG"] = "sv_SE.UTF-8"
 
 ############################### boring settings ###############################
 
