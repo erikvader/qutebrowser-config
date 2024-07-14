@@ -19,10 +19,10 @@ if [[ "$QUTE_URL" = *"$domain"* ]]; then
 fi
 
 yt_prog=youtube-dl
-if command -v youtube-dl-format &>/dev/null; then
-    yt_prog=youtube-dl-format
+if command -v youtube-dl-ph &>/dev/null; then
+    yt_prog=youtube-dl-ph
 else
-    echo "message-warning 'Could not find youtube-dl-format, using the normal one'" >> "$QUTE_FIFO"
+    echo "message-warning 'Could not find youtube-dl-ph, using the normal one'" >> "$QUTE_FIFO"
 fi
 
 cd "$DLDIR"
