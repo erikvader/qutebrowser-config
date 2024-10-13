@@ -73,6 +73,8 @@ c.fonts.default_family = ["DejaVu Sans Mono"]
 c.fonts.prompts = "default_size default_family"
 c.completion.open_categories = ["quickmarks", "bookmarks", "history"]
 c.hints.selectors["magnets"] = ["[href^=\"magnet:\"]"]
+c.aliases["tor"] = "set --temp content.proxy socks://localhost:9050/"
+c.aliases["notor"] = "config-unset content.proxy"
 
 ################################ emacs bindings ###############################
 
