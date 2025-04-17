@@ -28,7 +28,7 @@ fi
 cd "$DLDIR"
 echo "message-info 'starting download of $QUTE_URL'" > "$QUTE_FIFO"
 if $yt_prog ${cookies:+ --cookies "$cookies"} "${YTDLFLAGS[@]}" "$QUTE_URL"; then
-    echo "message-info 'downloaded successfully to $DLDIR'" > "$QUTE_FIFO"
+    echo "message-info 'downloaded $QUTE_URL successfully to $DLDIR'" > "$QUTE_FIFO"
 else
-    echo "message-error 'download failed'" > "$QUTE_FIFO"
+    echo "message-error 'download of $QUTE_URL failed'" > "$QUTE_FIFO"
 fi
