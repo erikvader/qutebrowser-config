@@ -203,6 +203,7 @@ c.bindings.commands['normal'] = {
 
    # torrent
    '<ctrl-x>t': 'hint magnets userscript torrentdownload',
+   '<ctrl-x><ctrl-t>': 'spawn --userscript torrentdownload clipboard',
 
    # anime
    '<ctrl-x>ar': 'spawn --userscript random_anime',

@@ -1,14 +1,24 @@
 #!/bin/bash
 
-set -e
+set -eu
 
 LATESTFILE=/tmp/quterorrentdownloadlatest
+
+URL=$QUTE_URL
+if [[ -v 1 && $1 = clipboard ]]; then
+    URL=$(xclip -selection clipboard -o)
+fi
+
+if [[ ! $URL = magnet:* ]]; then
+    echo message-error "'Not a magnet link: $URL'" > "$QUTE_FIFO"
+    exit 1
+fi
 
 path=$( ( [[ -f $LATESTFILE ]] && cat "$LATESTFILE"; jq -r '.download_location_paths_list[]?' "$HOME/.config/deluge/core.conf"; echo other ) | fzf_dmenu --prompt="Download: ")
 
 if [[ $path = other ]]; then
     echo message-info "'Starting graphical deluge'" > "$QUTE_FIFO"
-    deluge-gtk "$QUTE_URL"
+    deluge-gtk "$URL"
 elif [[ -n $path ]]; then
     if [[ $path = latest:* ]]; then
         path=${path#latest:}
@@ -31,7 +41,7 @@ elif [[ -n $path ]]; then
 
     if pgrep -x deluged &>/dev/null; then
         echo message-info "'Starting deluge-console...'" > "$QUTE_FIFO"
-        if ! console_out=$(deluge-console "add -p \"$path\" \"$QUTE_URL\""); then
+        if ! console_out=$(deluge-console "add -p \"$path\" \"$URL\""); then
             if grep -xqF 'Torrent added!' <<< "$console_out"; then
                 echo message-warning "'deluge-console failed but seems to have worked anyway'" > "$QUTE_FIFO"
             else
